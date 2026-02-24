@@ -12,21 +12,11 @@ import EleventhSec from "./EleventhSec";
 import ResidentialCommercialServices from "./ResidentialCommercialServices";
 import ProjectsCarousel from "./ProjectsCarousel";
 
-export interface Service {
-  title: string;
-  description: string;
-  icon: string;
-}
-
 interface PageOneAllSectionProps {
-  services: Service[];
   faqs: { question: string; answer: string }[];
 }
 
-const PageOneAllSection: React.FC<PageOneAllSectionProps> = ({
-  services,
-  faqs,
-}) => {
+const PageOneAllSection: React.FC<PageOneAllSectionProps> = ({ faqs }) => {
   return (
     <div>
       <Herosection />
