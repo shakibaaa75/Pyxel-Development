@@ -36,7 +36,7 @@ const PageOneAllSection: React.FC<PageOneAllSectionProps> = ({
       <FourthSection />
 
       {/* Services Section */}
-      <FifthSection services={services} />
+      <FifthSection />
       <SixThsection />
       <ProjectsCarousel />
       <EleventhSec />
