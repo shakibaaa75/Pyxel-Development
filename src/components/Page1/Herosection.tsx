@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const slides = [
   {
@@ -23,10 +23,31 @@ const slides = [
 
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [clickedButton, setClickedButton] = useState<"prev" | "next" | null>(
+    null,
+  );
 
-  const nextSlide = () => setCurrentSlide((p) => (p + 1) % slides.length);
-  const prevSlide = () =>
-    setCurrentSlide((p) => (p - 1 + slides.length) % slides.length);
+  // Auto scroll every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handlePrev = useCallback(() => {
+    setClickedButton("prev");
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    // Reset clicked state after animation
+    setTimeout(() => setClickedButton(null), 200);
+  }, []);
+
+  const handleNext = useCallback(() => {
+    setClickedButton("next");
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+    // Reset clicked state after animation
+    setTimeout(() => setClickedButton(null), 200);
+  }, []);
 
   return (
     <section className="relative w-full h-[85vh] flex items-center overflow-hidden font-sans">
@@ -68,7 +89,7 @@ export default function HeroSection() {
       />
 
       {/* Main Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-10 py-20 pb-32 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-10 py-20 pb-40 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         {/* Left Content */}
         <div className="max-w-xl">
           {/* Tag */}
@@ -112,11 +133,19 @@ export default function HeroSection() {
           </button>
         </div>
 
-        {/* Right Side - Review Card */}
-        <div className="hidden lg:flex justify-end items-end self-end h-full pb-10">
+        {/* Right Side - Review Card - Positioned more bottom */}
+        <div className="hidden lg:flex justify-end items-end self-end h-full pb-24">
           <div
-            className="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-6 border border-white/80 relative"
-            style={{ width: "405px", minHeight: "202px" }}
+            className="relative rounded-2xl shadow-xl p-6 border border-white/80"
+            style={{
+              position: "absolute",
+              bottom: "90px",
+              width: "405px",
+              minHeight: "202px",
+              background: "rgba(243, 248, 255, 0.78)", // #F3F8FFC7
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
+            }}
           >
             {/* Social Icons */}
             <div className="flex items-center gap-2.5 mb-4">
@@ -204,14 +233,18 @@ export default function HeroSection() {
                 ))}
               </div>
 
-              {/* Arrows */}
+              {/* Arrows with click color change */}
               <div className="flex gap-2">
                 <button
-                  onClick={prevSlide}
-                  className="w-9 h-9 rounded-lg border border-gray-200 bg-white flex items-center justify-center hover:bg-gray-50 transition"
+                  onClick={handlePrev}
+                  className={`w-9 h-9 rounded-lg border flex items-center justify-center transition-all duration-200 ${
+                    clickedButton === "prev"
+                      ? "bg-blue-600 border-blue-600 text-white"
+                      : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
+                  }`}
                 >
                   <svg
-                    className="w-4 h-4 text-gray-600"
+                    className="w-4 h-4"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -225,11 +258,15 @@ export default function HeroSection() {
                   </svg>
                 </button>
                 <button
-                  onClick={nextSlide}
-                  className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center hover:bg-blue-700 transition"
+                  onClick={handleNext}
+                  className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 ${
+                    clickedButton === "next"
+                      ? "bg-blue-800 text-white"
+                      : "bg-blue-600 text-white hover:bg-blue-700"
+                  }`}
                 >
                   <svg
-                    className="w-4 h-4 text-white"
+                    className="w-4 h-4"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
