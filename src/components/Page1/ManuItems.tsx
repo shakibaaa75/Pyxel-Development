@@ -1,15 +1,18 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
-interface ManuItemsProps {
-  className?: string;
-}
-
-const ManuItems: React.FC<ManuItemsProps> = ({ className }) => {
+const ManuItems: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navItems = ["Home", "About", "Services", "Shop", "Contact Us"];
+  const navItems = [
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
+    { name: "Services", path: "/services" },
+    { name: "Shop", path: "/shop" },
+    { name: "Contact Us", path: "/contact" },
+  ];
 
   return (
-    <nav className={`w-full bg-[#1E1E20] ${className}`}>
+    <nav className="w-full bg-[#1E1E20]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 md:h-20 flex items-center justify-between">
         {/* Logo */}
         <div className="flex-shrink-0">
@@ -24,24 +27,24 @@ const ManuItems: React.FC<ManuItemsProps> = ({ className }) => {
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center gap-6 xl:gap-8">
           {navItems.map((item, index) => (
-            <a
+            <Link
               key={index}
-              href="#"
+              to={item.path}
               className="text-gray-300 hover:text-white transition-colors duration-200 text-sm xl:text-base whitespace-nowrap"
             >
-              {item}
-            </a>
+              {item.name}
+            </Link>
           ))}
         </div>
 
         {/* Desktop Button */}
         <div className="hidden lg:block flex-shrink-0">
-          <button className="bg-[#0B4196] text-white px-5 py-2 rounded-md hover:bg-[#0252CF] transition duration-200 text-sm font-medium">
+          <button className="bg-white text-[#1E1E20] px-5 py-2 rounded-md hover:bg-gray-200 transition duration-200 text-sm font-medium">
             Free Estimate
           </button>
         </div>
 
-        {/* Mobile & Tablet Menu Button */}
+        {/* Mobile & Tablet Menu Button - Only this one */}
         <button
           className="lg:hidden text-gray-300 hover:text-white text-2xl z-50 relative"
           onClick={() => setIsOpen(!isOpen)}
@@ -59,14 +62,14 @@ const ManuItems: React.FC<ManuItemsProps> = ({ className }) => {
           {/* Navigation Items */}
           <div className="flex flex-col gap-6">
             {navItems.map((item, index) => (
-              <a
+              <Link
                 key={index}
-                href="#"
+                to={item.path}
                 className="text-gray-300 hover:text-white transition text-xl font-medium"
                 onClick={() => setIsOpen(false)}
               >
-                {item}
-              </a>
+                {item.name}
+              </Link>
             ))}
           </div>
 
@@ -181,7 +184,7 @@ const ManuItems: React.FC<ManuItemsProps> = ({ className }) => {
             </a>
           </div>
 
-          {/* Free Estimate Button - Under Social Icons */}
+          {/* Free Estimate Button */}
           <div className="mt-8">
             <button
               className="w-full border border-white/30 text-white py-4 rounded hover:bg-white/10 transition text-lg font-medium"
