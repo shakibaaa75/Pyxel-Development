@@ -1,6 +1,5 @@
 import React from "react";
 import Herosection from "./Herosection";
-import FifthSection from "./FifthSec";
 import Twelvethsec from "./TwelvethSec";
 import AfterHeroSec from "./AfterHeroSec";
 import ThardsecTionPage1 from "./ThardsecTionPage1";
@@ -9,9 +8,10 @@ import SixThsection from "./SixThsection";
 import FromSec from "./FromSec";
 
 import EleventhSec from "./EleventhSec";
-import ResidentialCommercialServices from "./ResidentialCommercialServices";
 import ProjectsCarousel from "./ProjectsCarousel";
 import ExpertServices from "./ExpertServices";
+import ServicesSection from "./ServicesSection";
+import ServiceArea from "./ServiceArea";
 
 interface PageOneAllSectionProps {
   faqs: { question: string; answer: string }[];
@@ -23,12 +23,13 @@ const PageOneAllSection: React.FC<PageOneAllSectionProps> = ({ faqs }) => {
       <Herosection />
       <ExpertServices />
       <AfterHeroSec />
+      <ServicesSection />
+      <ServiceArea />
       <ThardsecTionPage1 />
-      <ResidentialCommercialServices />
       <FourthSection />
 
       {/* Services Section */}
-      <FifthSection />
+
       <SixThsection />
       <ProjectsCarousel />
       <EleventhSec />

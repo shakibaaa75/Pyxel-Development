@@ -10,37 +10,111 @@ const FromSec: React.FC = () => {
     message: "",
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Clear error when user starts typing again
+    if (submitError) {
+      setSubmitError(null);
+    }
+    // Reset submitted state when user starts typing
+    if (isSubmitted) {
+      setIsSubmitted(false);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    // Basic validation
+    if (!formData.fullName || !formData.phoneNumber || !formData.emailAddress) {
+      setSubmitError("Please fill in all required fields");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.emailAddress)) {
+      setSubmitError("Please enter a valid email address");
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      // Using FormSubmit.co (Free, no backend required)
+      const formEndpoint = "https://formsubmit.co/ajax/shakib875c@gmail.com";
+
+      const response = await fetch(formEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.fullName,
+          phone: formData.phoneNumber,
+          email: formData.emailAddress,
+          lookingFor: formData.lookingFor,
+          message: formData.message,
+          _subject: "New Contact Form Submission from Pyxel Construction",
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Set submitted state to true to change button text
+        setIsSubmitted(true);
+        // Clear form
+        setFormData({
+          fullName: "",
+          phoneNumber: "",
+          emailAddress: "",
+          lookingFor: "",
+          message: "",
+        });
+      } else {
+        throw new Error("Failed to send message");
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      setSubmitError(
+        "Failed to send message. Please try again or call us directly.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <section className="w-full bg-[#1a1a1a] py-16 md:py-24 lg:py-32 relative">
+    <section className="w-full py-16 md:py-24 lg:py-32 relative">
       {/* Dot pattern background */}
       <div
         className="absolute inset-0 opacity-20"
         style={{
-          backgroundImage:
-            "radial-gradient(circle, #ffffff 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
+          backgroundImage: "url('./image/Background.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "top center",
+          backgroundRepeat: "no-repeat",
         }}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
           {/* Left - Image */}
           <div className="relative rounded-2xl overflow-hidden flex justify-center">
             <img
               src="./image/image13.jpg"
               alt="Modern luxury home"
-              className="w-full h-auto  lg:max-w-[518px] lg:h-[642px] object-cover rounded-2xl"
+              className="w-full h-auto lg:max-w-[518px] lg:h-[642px] object-cover rounded-2xl"
             />
           </div>
 
@@ -63,28 +137,38 @@ const FromSec: React.FC = () => {
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              {/* Error Message - Only shown when there's an error */}
+              {submitError && (
+                <div className="p-4 rounded-lg bg-red-600 text-white">
+                  {submitError}
+                </div>
+              )}
+
               <input
                 type="text"
                 name="fullName"
-                placeholder="Full Name"
+                placeholder="Full Name *"
                 value={formData.fullName}
                 onChange={handleChange}
+                required
                 className="w-full px-6 py-4 rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
               <input
                 type="tel"
                 name="phoneNumber"
-                placeholder="Phone Number"
+                placeholder="Phone Number *"
                 value={formData.phoneNumber}
                 onChange={handleChange}
+                required
                 className="w-full px-6 py-4 rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
               <input
                 type="email"
                 name="emailAddress"
-                placeholder="Email Address"
+                placeholder="Email Address *"
                 value={formData.emailAddress}
                 onChange={handleChange}
+                required
                 className="w-full px-6 py-4 rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
               <input
@@ -106,19 +190,31 @@ const FromSec: React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 rounded-lg transition duration-200 mt-2"
+                disabled={isSubmitting || isSubmitted}
+                className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 rounded-lg transition duration-200 mt-2 ${
+                  isSubmitting || isSubmitted
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
               >
-                Submit Message
+                {isSubmitting
+                  ? "Submitting..."
+                  : isSubmitted
+                    ? "Submitted!"
+                    : "Submit Message"}
               </button>
             </form>
           </div>
         </div>
 
-        {/* Bottom Contact Info */}
+        {/* Bottom Contact Info - Made interactive */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 pt-8 border-t border-gray-800">
           {/* Phone */}
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+          <a
+            href="tel:9168888281"
+            className="flex items-center gap-4 group cursor-pointer hover:bg-gray-800/50 p-4 rounded-lg transition-all duration-200"
+          >
+            <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-blue-700 transition-colors">
               <svg
                 className="w-5 h-5 text-white"
                 fill="none"
@@ -135,13 +231,18 @@ const FromSec: React.FC = () => {
             </div>
             <div>
               <p className="text-gray-400 text-sm">Have Any Questions?</p>
-              <p className="text-white font-medium">(916) 888-8281</p>
+              <p className="text-white font-medium group-hover:text-blue-400 transition-colors">
+                (916) 888-8281
+              </p>
             </div>
-          </div>
+          </a>
 
           {/* Email */}
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+          <a
+            href="mailto:contact@pyxelconstruction.com"
+            className="flex items-center gap-4 group cursor-pointer hover:bg-gray-800/50 p-4 rounded-lg transition-all duration-200"
+          >
+            <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-blue-700 transition-colors">
               <svg
                 className="w-5 h-5 text-white"
                 fill="none"
@@ -158,14 +259,14 @@ const FromSec: React.FC = () => {
             </div>
             <div>
               <p className="text-gray-400 text-sm">Call Support Center 24/7</p>
-              <p className="text-white font-medium">
+              <p className="text-white font-medium group-hover:text-blue-400 transition-colors">
                 contact@pyxelconstruction.com
               </p>
             </div>
-          </div>
+          </a>
 
           {/* Location */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 group p-4">
             <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
               <svg
                 className="w-5 h-5 text-white"

@@ -9,7 +9,11 @@ const TopNav: React.FC = () => {
         <div className="max-w-7xl mx-auto py-3 px-6 flex items-center justify-between">
           {/* Left side - Contact Info */}
           <div className="flex items-center gap-4 lg:gap-6">
-            <div className="flex items-center gap-2">
+            <a
+              href="tel:9168888281"
+              className="flex items-center gap-2 hover:text-gray-300 transition-colors"
+              aria-label="Call us"
+            >
               <svg
                 className="w-4 h-4 flex-shrink-0"
                 fill="none"
@@ -24,11 +28,15 @@ const TopNav: React.FC = () => {
                 />
               </svg>
               <span className="text-sm whitespace-nowrap">(916) 888-8281</span>
-            </div>
+            </a>
 
             <div className="w-px h-4 bg-gray-600" />
 
-            <div className="flex items-center gap-2">
+            <a
+              href="mailto:contact@pyxelconstruction.com"
+              className="flex items-center gap-2 hover:text-gray-300 transition-colors"
+              aria-label="Email us"
+            >
               <svg
                 className="w-4 h-4 flex-shrink-0"
                 fill="none"
@@ -48,7 +56,7 @@ const TopNav: React.FC = () => {
               <span className="text-sm whitespace-nowrap lg:hidden">
                 contact@pyxel...
               </span>
-            </div>
+            </a>
           </div>
 
           {/* Right side - Navigation & Social */}
@@ -69,6 +77,8 @@ const TopNav: React.FC = () => {
                 href="#"
                 className="hover:text-gray-300 transition-colors"
                 aria-label="Facebook"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <svg
                   className="w-4 h-4"
@@ -79,11 +89,13 @@ const TopNav: React.FC = () => {
                 </svg>
               </a>
 
-              {/* Instagram */}
+              {/* Instagram - Updated with the provided link */}
               <a
-                href="#"
+                href="https://www.instagram.com/pyxelconstruction?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
                 className="hover:text-gray-300 transition-colors"
                 aria-label="Instagram"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <svg
                   className="w-4 h-4"
@@ -99,6 +111,8 @@ const TopNav: React.FC = () => {
                 href="#"
                 className="hover:text-gray-300 transition-colors"
                 aria-label="LinkedIn"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <svg
                   className="w-4 h-4"
@@ -161,6 +175,7 @@ const TopNav: React.FC = () => {
         <a
           href="tel:9168888281"
           className="flex items-center justify-center gap-2 hover:text-gray-300 transition-colors"
+          aria-label="Call us"
         >
           <svg
             className="w-4 h-4 flex-shrink-0"
@@ -182,6 +197,7 @@ const TopNav: React.FC = () => {
         <a
           href="mailto:contact@pyxelconstruction.com"
           className="flex items-center justify-center gap-2 hover:text-gray-300 transition-colors"
+          aria-label="Email us"
         >
           <svg
             className="w-4 h-4 flex-shrink-0"
