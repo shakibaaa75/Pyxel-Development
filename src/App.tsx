@@ -1,15 +1,32 @@
 // App.tsx
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Navebar from "./components/Page1/Navebar";
 import Footer from "./components/Footer";
 
-// Import page components (you'll need to create these)
+// Import page components
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Services from "./pages/Services";
 import Shop from "./pages/Shop";
 import Contact from "./pages/Contact";
+import BlogPostPage from "./components/blog/BlogPostPage";
+
+// Create a wrapper component that handles scrolling
+function ScrollToTopWrapper({ children }: { children: React.ReactNode }) {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Scroll to top whenever the route changes
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth", // Use "instant" for no animation, or "smooth" for smooth scrolling
+    });
+  }, [pathname]);
+
+  return <>{children}</>;
+}
 
 // Data for services
 const services = [
@@ -92,14 +109,20 @@ const App: React.FC = () => {
       {/* Navigation - Always visible */}
       <Navebar />
 
-      {/* Routes */}
-      <Routes>
-        <Route path="/" element={<Home services={services} faqs={faqData} />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/contact" element={<Contact />} />
-      </Routes>
+      {/* ScrollToTopWrapper ensures every new page starts from the top */}
+      <ScrollToTopWrapper>
+        <Routes>
+          <Route
+            path="/"
+            element={<Home services={services} faqs={faqData} />}
+          />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
+        </Routes>
+      </ScrollToTopWrapper>
 
       {/* Footer - Always visible */}
       <Footer />

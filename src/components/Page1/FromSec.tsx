@@ -98,7 +98,7 @@ const FromSec: React.FC = () => {
     <section className="w-full py-16 md:py-24 lg:py-32 relative">
       {/* Dot pattern background */}
       <div
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-100"
         style={{
           backgroundImage: "url('./image/Background.png')",
           backgroundSize: "cover",

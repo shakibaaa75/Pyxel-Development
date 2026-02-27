@@ -46,10 +46,10 @@ const Footer: React.FC = () => {
           <p className="font-semibold text-sm">Follow us :</p>
           <div className="flex gap-3">
             {[
-              "facebook.png",
-              "instagram.png",
-              "twitter.png",
-              "linkedin.png",
+              "Group 58.png",
+              "Group 62.png",
+              "Group 63.png",
+              "Group 64.png",
             ].map((icon, i) => (
               <a
                 key={i}
@@ -57,9 +57,9 @@ const Footer: React.FC = () => {
                 className="w-9 h-9 rounded-full bg-[#1c1c1c] border border-[#333] flex items-center justify-center hover:bg-blue-600 hover:border-blue-600 transition"
               >
                 <img
-                  src={`/icons/${icon}`}
+                  src={`/svg/${icon}`}
                   alt=""
-                  className="w-4 h-4 object-contain"
+                  className="w-full h-full object-contain"
                 />
               </a>
             ))}

@@ -12,6 +12,9 @@ import ProjectsCarousel from "./ProjectsCarousel";
 import ExpertServices from "./ExpertServices";
 import ServicesSection from "./ServicesSection";
 import ServiceArea from "./ServiceArea";
+import BlogForHome from "../blog/BlogforHome";
+import StatsSection from "./StatsSection";
+import WhyChooseUs from "./WhyChooseUs";
 
 interface PageOneAllSectionProps {
   faqs: { question: string; answer: string }[];
@@ -26,6 +29,8 @@ const PageOneAllSection: React.FC<PageOneAllSectionProps> = ({ faqs }) => {
       <ServicesSection />
       <ServiceArea />
       <ThardsecTionPage1 />
+      <StatsSection />
+      <WhyChooseUs />
       <FourthSection />
 
       {/* Services Section */}
@@ -36,6 +41,7 @@ const PageOneAllSection: React.FC<PageOneAllSectionProps> = ({ faqs }) => {
       {/* FAQ Section */}
       <Twelvethsec faqs={faqs} />
       <FromSec />
+      <BlogForHome />
     </div>
   );
 };

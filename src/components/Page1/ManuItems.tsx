@@ -56,12 +56,14 @@ const ManuItems: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 md:h-20 flex items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <img
-              src="./image/image 3.png"
-              alt="Pyxel Construction Logo"
-              className="h-10 md:h-12 lg:h-14 w-auto object-contain"
-              style={{ maxWidth: "160px" }}
-            />
+            <Link to="/" aria-label="Go to home">
+              <img
+                src="/image/image 3.png"
+                alt="Pyxel Construction Logo"
+                className="h-10 md:h-12 lg:h-14 w-auto object-contain cursor-pointer"
+                style={{ maxWidth: "160px" }}
+              />
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
