@@ -1,5 +1,5 @@
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { SAMPLE_POSTS } from "../../data/blogData";
 import type { BlogPost } from "../../types/blog";
 
@@ -10,165 +10,262 @@ export default function BlogPostPage() {
   const [loading, setLoading] = useState(true);
   const [instagramPosts, setInstagramPosts] = useState<any[]>([]);
 
+  // Search state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSearchResults, setShowSearchResults] = useState(false);
+
+  // Simple search results - filters from first letter
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim() || !SAMPLE_POSTS) return [];
+
+    const query = searchQuery.toLowerCase().trim();
+
+    return SAMPLE_POSTS.filter((post) => {
+      if (!post) return false;
+
+      const titleLower = post.title?.toLowerCase() || "";
+      const categoryLower = post.category?.toLowerCase() || "";
+      const excerptLower = post.excerpt?.toLowerCase() || "";
+
+      // Check if ANY field starts with the query (first letter matching)
+      return (
+        titleLower.startsWith(query) ||
+        categoryLower.startsWith(query) ||
+        excerptLower.startsWith(query) ||
+        // Also check if any word in the title starts with the query
+        titleLower.split(/\s+/).some((word) => word.startsWith(query)) ||
+        categoryLower.split(/\s+/).some((word) => word.startsWith(query))
+      );
+    }).slice(0, 5); // Limit to 5 results
+  }, [searchQuery]);
+
   // Fetch Instagram posts
   useEffect(() => {
-    // This would be replaced with your actual Instagram API call
-    // For now, we'll use a placeholder service that always works
     const fetchInstagramPosts = async () => {
-      // Simulating Instagram API response with your actual post
-      const mockInstagramData = [
-        {
-          id: "DL5JoPjBm-L",
-          media_url:
-            "https://images.unsplash.com/photo-1581094794329-c8112c4e5190?w=400&h=400&fit=crop",
-          permalink: "https://www.instagram.com/p/DL5JoPjBm-L/",
-          caption: "🏗️ 3 Duplexes. 3 Stages. All Underway in Citrus Heights!",
-          timestamp: "2025-07-09T12:00:00Z",
-        },
-        // Add more posts as needed - using Unsplash as fallback images
-        {
-          id: "2",
-          media_url:
-            "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=400&h=400&fit=crop",
-          permalink: "https://www.instagram.com/pyxelconstruction/",
-          caption: "Construction progress update",
-          timestamp: "2025-07-08T12:00:00Z",
-        },
-        {
-          id: "3",
-          media_url:
-            "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400&h=400&fit=crop",
-          permalink: "https://www.instagram.com/pyxelconstruction/",
-          caption: "Framing completed",
-          timestamp: "2025-07-07T12:00:00Z",
-        },
-        {
-          id: "4",
-          media_url:
-            "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=400&fit=crop",
-          permalink: "https://www.instagram.com/pyxelconstruction/",
-          caption: "Foundation work",
-          timestamp: "2025-07-06T12:00:00Z",
-        },
-        {
-          id: "5",
-          media_url:
-            "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=400&fit=crop",
-          permalink: "https://www.instagram.com/pyxelconstruction/",
-          caption: "Site preparation",
-          timestamp: "2025-07-05T12:00:00Z",
-        },
-        {
-          id: "6",
-          media_url:
-            "https://images.unsplash.com/photo-1545259741-2ea3ebf61fa3?w=400&h=400&fit=crop",
-          permalink: "https://www.instagram.com/pyxelconstruction/",
-          caption: "Final touches",
-          timestamp: "2025-07-04T12:00:00Z",
-        },
-      ];
+      try {
+        const mockInstagramData = [
+          {
+            id: "DL5JoPjBm-L",
+            media_url:
+              "https://images.unsplash.com/photo-1581094794329-c8112c4e5190?w=400&h=400&fit=crop",
+            permalink: "https://www.instagram.com/p/DL5JoPjBm-L/",
+            caption: "🏗️ 3 Duplexes. 3 Stages. All Underway in Citrus Heights!",
+            timestamp: "2025-07-09T12:00:00Z",
+          },
+          {
+            id: "2",
+            media_url:
+              "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=400&h=400&fit=crop",
+            permalink: "https://www.instagram.com/pyxelconstruction/",
+            caption: "Construction progress update",
+            timestamp: "2025-07-08T12:00:00Z",
+          },
+          {
+            id: "3",
+            media_url:
+              "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400&h=400&fit=crop",
+            permalink: "https://www.instagram.com/pyxelconstruction/",
+            caption: "Framing completed",
+            timestamp: "2025-07-07T12:00:00Z",
+          },
+          {
+            id: "4",
+            media_url:
+              "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=400&fit=crop",
+            permalink: "https://www.instagram.com/pyxelconstruction/",
+            caption: "Foundation work",
+            timestamp: "2025-07-06T12:00:00Z",
+          },
+          {
+            id: "5",
+            media_url:
+              "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=400&fit=crop",
+            permalink: "https://www.instagram.com/pyxelconstruction/",
+            caption: "Site preparation",
+            timestamp: "2025-07-05T12:00:00Z",
+          },
+          {
+            id: "6",
+            media_url:
+              "https://images.unsplash.com/photo-1545259741-2ea3ebf61fa3?w=400&h=400&fit=crop",
+            permalink: "https://www.instagram.com/pyxelconstruction/",
+            caption: "Final touches",
+            timestamp: "2025-07-04T12:00:00Z",
+          },
+        ];
 
-      setInstagramPosts(mockInstagramData);
+        setInstagramPosts(mockInstagramData);
+      } catch (error) {
+        console.error("Error fetching Instagram posts:", error);
+        setInstagramPosts([]);
+      }
     };
 
     fetchInstagramPosts();
   }, []);
 
   useEffect(() => {
-    const foundPost = SAMPLE_POSTS.find((p) => {
-      const postSlug = p.title
+    try {
+      const foundPost = SAMPLE_POSTS.find((p) => {
+        if (!p || !p.title) return false;
+        const postSlug = p.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "");
+        return postSlug === slug;
+      });
+
+      if (foundPost) {
+        setPost(foundPost);
+        updateMetaTags(foundPost);
+      } else {
+        navigate("/", { replace: true });
+      }
+    } catch (error) {
+      console.error("Error finding post:", error);
+      navigate("/", { replace: true });
+    } finally {
+      setLoading(false);
+    }
+  }, [slug, navigate]);
+
+  // Search functionality - shows results immediately
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    // Show results as soon as there's at least one character
+    setShowSearchResults(query.length >= 1);
+  };
+
+  const handleResultClick = (resultPost: BlogPost) => {
+    try {
+      const resultSlug = resultPost.title
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-|-$/g, "");
-      return postSlug === slug;
-    });
-
-    if (foundPost) {
-      setPost(foundPost);
-
-      // Set meta tags for the featured image
-      updateMetaTags(foundPost);
-    } else {
-      navigate("/", { replace: true });
+      navigate(`/blog/${resultSlug}`);
+      setShowSearchResults(false);
+      setSearchQuery("");
+    } catch (error) {
+      console.error("Error navigating to post:", error);
     }
-    setLoading(false);
-  }, [slug, navigate]);
+  };
+
+  // Close search results when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const searchContainer = document.getElementById("search-container");
+      if (searchContainer && !searchContainer.contains(e.target as Node)) {
+        setShowSearchResults(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Helper function to update meta tags
   const updateMetaTags = (post: BlogPost) => {
-    // Remove any existing meta tags we might have added
-    const existingMeta = document.querySelector('meta[property="og:image"]');
-    const existingTwitterMeta = document.querySelector(
-      'meta[name="twitter:image"]',
-    );
-
-    if (existingMeta) existingMeta.remove();
-    if (existingTwitterMeta) existingTwitterMeta.remove();
-
-    // Create new meta tags with absolute URL
-    const baseUrl = window.location.origin;
-    const imageUrl = post.image.startsWith("http")
-      ? post.image
-      : `${baseUrl}${post.image.startsWith("/") ? "" : "/"}${post.image}`;
-
-    // Create og:image meta tag
-    const ogImage = document.createElement("meta");
-    ogImage.setAttribute("property", "og:image");
-    ogImage.setAttribute("content", imageUrl);
-    document.head.appendChild(ogImage);
-
-    // Create twitter:image meta tag
-    const twitterImage = document.createElement("meta");
-    twitterImage.setAttribute("name", "twitter:image");
-    twitterImage.setAttribute("content", imageUrl);
-    document.head.appendChild(twitterImage);
-
-    // Also update title and other meta if needed
-    document.title = `${post.title} - Your Blog`;
-
-    const ogTitle = document.querySelector('meta[property="og:title"]');
-    if (ogTitle) {
-      ogTitle.setAttribute("content", post.title);
-    }
-
-    const ogDescription = document.querySelector(
-      'meta[property="og:description"]',
-    );
-    if (ogDescription) {
-      ogDescription.setAttribute(
-        "content",
-        post.excerpt || post.content.substring(0, 150).replace(/<[^>]*>/g, ""),
+    try {
+      const existingMeta = document.querySelector('meta[property="og:image"]');
+      const existingTwitterMeta = document.querySelector(
+        'meta[name="twitter:image"]',
       );
+
+      if (existingMeta) existingMeta.remove();
+      if (existingTwitterMeta) existingTwitterMeta.remove();
+
+      const baseUrl = window.location.origin;
+      const imageUrl = post.image?.startsWith("http")
+        ? post.image
+        : `${baseUrl}${post.image?.startsWith("/") ? "" : "/"}${post.image || ""}`;
+
+      const ogImage = document.createElement("meta");
+      ogImage.setAttribute("property", "og:image");
+      ogImage.setAttribute("content", imageUrl);
+      document.head.appendChild(ogImage);
+
+      const twitterImage = document.createElement("meta");
+      twitterImage.setAttribute("name", "twitter:image");
+      twitterImage.setAttribute("content", imageUrl);
+      document.head.appendChild(twitterImage);
+
+      document.title = `${post.title || "Blog"} - Your Blog`;
+
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) {
+        ogTitle.setAttribute("content", post.title || "");
+      }
+
+      const ogDescription = document.querySelector(
+        'meta[property="og:description"]',
+      );
+      if (ogDescription) {
+        ogDescription.setAttribute(
+          "content",
+          post.excerpt ||
+            (post.content
+              ? post.content.substring(0, 150).replace(/<[^>]*>/g, "")
+              : ""),
+        );
+      }
+    } catch (error) {
+      console.error("Error updating meta tags:", error);
     }
   };
 
   // Clean up meta tags when component unmounts
   useEffect(() => {
     return () => {
-      const ogImage = document.querySelector('meta[property="og:image"]');
-      const twitterImage = document.querySelector('meta[name="twitter:image"]');
+      try {
+        const ogImage = document.querySelector('meta[property="og:image"]');
+        const twitterImage = document.querySelector(
+          'meta[name="twitter:image"]',
+        );
 
-      if (ogImage && ogImage.getAttribute("content")?.includes("blob:")) {
-        ogImage.remove();
-      }
-      if (
-        twitterImage &&
-        twitterImage.getAttribute("content")?.includes("blob:")
-      ) {
-        twitterImage.remove();
+        if (ogImage && ogImage.getAttribute("content")?.includes("blob:")) {
+          ogImage.remove();
+        }
+        if (
+          twitterImage &&
+          twitterImage.getAttribute("content")?.includes("blob:")
+        ) {
+          twitterImage.remove();
+        }
+      } catch (error) {
+        console.error("Error cleaning up meta tags:", error);
       }
     };
   }, []);
 
   // Helper function to get correct image path
   const getImageUrl = (imagePath: string) => {
-    if (imagePath.startsWith("http")) {
-      return imagePath;
+    try {
+      if (!imagePath) return "/images/fallback-image.jpg";
+      if (imagePath.startsWith("http")) {
+        return imagePath;
+      }
+      const cleanPath = imagePath.replace(/^\.\/|^\.\.\//g, "");
+      return cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`;
+    } catch (error) {
+      return "/images/fallback-image.jpg";
     }
-    // Remove any leading './' or '../' and ensure it's absolute from root
-    const cleanPath = imagePath.replace(/^\.\/|^\.\.\//g, "");
-    // Make sure the path starts with a forward slash
-    return cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`;
+  };
+
+  // Highlight matching text
+  const highlightMatch = (text: string, query: string) => {
+    if (!text || !query.trim()) return text;
+
+    try {
+      const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(`(${escapedQuery})`, "gi");
+      return text.replace(
+        regex,
+        '<mark class="bg-yellow-200 px-0.5 rounded">$1</mark>',
+      );
+    } catch (error) {
+      return text;
+    }
   };
 
   if (loading) {
@@ -183,7 +280,7 @@ export default function BlogPostPage() {
     return null;
   }
 
-  const readingTime = post.readTime || calculateReadingTime(post.content);
+  const readingTime = post.readTime || calculateReadingTime(post.content || "");
   const currentIndex = SAMPLE_POSTS.findIndex((p) => p.id === post.id);
   const prevPost = currentIndex > 0 ? SAMPLE_POSTS[currentIndex - 1] : null;
   const nextPost =
@@ -191,10 +288,9 @@ export default function BlogPostPage() {
       ? SAMPLE_POSTS[currentIndex + 1]
       : null;
 
-  // Get unique categories
-  const categories = [...new Set(SAMPLE_POSTS.map((p) => p.category))];
-
-  // Get top posts (most recent)
+  const categories = [
+    ...new Set(SAMPLE_POSTS.map((p) => p.category).filter(Boolean)),
+  ];
   const topPosts = SAMPLE_POSTS.filter((p) => p.id !== post.id).slice(0, 5);
 
   return (
@@ -225,11 +321,10 @@ export default function BlogPostPage() {
             {/* Featured Image */}
             <div className="relative rounded-2xl overflow-hidden mb-8 bg-gray-100">
               <img
-                src={getImageUrl(post.image)}
-                alt={post.title}
+                src={getImageUrl(post.image || "")}
+                alt={post.title || "Blog post"}
                 className="w-full h-[400px] lg:h-[500px] object-cover"
                 onError={(e) => {
-                  // Fallback image if the main one fails to load
                   (e.target as HTMLImageElement).src =
                     "https://images.unsplash.com/photo-1581094794329-c8112c4e5190?w=1200&h=600&fit=crop";
                 }}
@@ -315,23 +410,23 @@ export default function BlogPostPage() {
               prose-blockquote:bg-blue-50 prose-blockquote:pl-6 prose-blockquote:py-4
               prose-blockquote:text-gray-700 prose-blockquote:italic prose-blockquote:rounded-r-lg
               prose-img:rounded-xl prose-img:my-8"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: post.content || "" }}
             />
 
             {/* Tags */}
             <div className="flex flex-wrap items-center gap-3 mb-12 pt-8 border-t border-gray-100">
               <span className="text-gray-500 text-sm font-medium">Tags:</span>
-              {[post.category, "Construction", "Tips", "Guide"].map(
-                (tag, index) => (
+              {[post.category, "Construction", "Tips", "Guide"]
+                .filter(Boolean)
+                .map((tag, index) => (
                   <Link
                     key={index}
-                    to={`/blog?tag=${tag.toLowerCase()}`}
+                    to={`/blog?tag=${tag?.toLowerCase() || ""}`}
                     className="px-4 py-2 bg-gray-100 text-gray-600 text-sm rounded-full hover:bg-blue-600 hover:text-white transition"
                   >
                     {tag}
                   </Link>
-                ),
-              )}
+                ))}
             </div>
 
             {/* Post Navigation */}
@@ -379,7 +474,7 @@ export default function BlogPostPage() {
               <h3 className="text-2xl font-bold text-gray-900 mb-6">
                 Leave a comment
               </h3>
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
                 <textarea
                   placeholder="Your comment"
                   rows={4}
@@ -423,7 +518,7 @@ export default function BlogPostPage() {
                 {categories.map((category, index) => (
                   <li key={index}>
                     <Link
-                      to={`/blog?category=${category.toLowerCase()}`}
+                      to={`/blog?category=${category?.toLowerCase() || ""}`}
                       className="flex items-center justify-between text-gray-600 hover:text-blue-600 transition group"
                     >
                       <span>{category}</span>
@@ -439,15 +534,23 @@ export default function BlogPostPage() {
               </ul>
             </div>
 
-            {/* Search */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-100">
+            {/* Search - Simple version that works */}
+            <div
+              className="bg-white rounded-2xl p-6 border border-gray-100 relative"
+              id="search-container"
+            >
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Search</h3>
+
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Type to search..."
+                  value={searchQuery}
+                  onChange={handleSearch}
                   className="w-full px-4 py-3 pr-12 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition"
+                  autoComplete="off"
                 />
-                <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition">
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -461,8 +564,54 @@ export default function BlogPostPage() {
                       d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                     />
                   </svg>
-                </button>
+                </div>
               </div>
+
+              {/* Search Results Dropdown */}
+              {showSearchResults && searchQuery.length >= 1 && (
+                <div className="absolute left-6 right-6 mt-2 bg-white border border-gray-100 rounded-xl shadow-lg overflow-hidden z-50 max-h-96 overflow-y-auto">
+                  {searchResults.length > 0 ? (
+                    <ul className="divide-y divide-gray-100">
+                      {searchResults.map((result) => (
+                        <li key={result.id}>
+                          <button
+                            onClick={() => handleResultClick(result)}
+                            className="w-full text-left px-4 py-3 hover:bg-blue-50 transition"
+                            type="button"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <p
+                                className="text-sm font-medium text-gray-900"
+                                dangerouslySetInnerHTML={{
+                                  __html: highlightMatch(
+                                    result.title || "",
+                                    searchQuery,
+                                  ),
+                                }}
+                              />
+                              <p className="text-xs text-gray-500 mt-1 flex items-center gap-2 flex-wrap">
+                                <span className="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full whitespace-nowrap">
+                                  {result.category}
+                                </span>
+                                <span className="whitespace-nowrap">
+                                  {result.date}
+                                </span>
+                              </p>
+                            </div>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="px-4 py-6 text-center">
+                      <p className="text-sm text-gray-500">No posts found</p>
+                      <p className="text-xs text-gray-400 mt-1">
+                        Try typing the first letter of a word
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Top Posts */}
@@ -483,7 +632,7 @@ export default function BlogPostPage() {
                       <span className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold text-sm">
                         {index + 1}
                       </span>
-                      <div>
+                      <div className="min-w-0 flex-1">
                         <h4 className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-blue-600 transition">
                           {topPost.title}
                         </h4>
@@ -497,7 +646,7 @@ export default function BlogPostPage() {
               </ul>
             </div>
 
-            {/* Instagram Grid - FIXED VERSION */}
+            {/* Instagram Grid */}
             <div className="bg-white rounded-2xl p-6 border border-gray-100">
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center justify-between">
                 <span>Instagram</span>
@@ -524,6 +673,10 @@ export default function BlogPostPage() {
                       alt={post.caption || "Instagram post"}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                       loading="lazy"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          "https://via.placeholder.com/150?text=Instagram";
+                      }}
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition flex items-center justify-center">
                       <svg
@@ -557,11 +710,16 @@ export default function BlogPostPage() {
 
 // Helper function for reading time
 function calculateReadingTime(content: string): string {
-  const text = content.replace(/<[^>]*>/g, "");
-  const words = text
-    .trim()
-    .split(/\s+/)
-    .filter((word) => word.length > 0);
-  const minutes = Math.ceil(words.length / 200);
-  return `${minutes} min`;
+  try {
+    if (!content) return "1 min";
+    const text = content.replace(/<[^>]*>/g, "");
+    const words = text
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word.length > 0);
+    const minutes = Math.ceil(words.length / 200);
+    return `${minutes || 1} min`;
+  } catch (error) {
+    return "1 min";
+  }
 }
