@@ -1,128 +1,12 @@
+// pages/ProjectsCarousel.tsx
 import React from "react";
+import { Link } from "react-router-dom";
+import { getFeaturedProjects } from "../../data/projectData";
+import ProjectCard from "./ProjectCard";
 
-// Type for a single project
-interface Project {
-  title: string;
-  image: string;
-  cost: string;
-  client: string;
-  year: string;
-  location: string;
-}
-
-const projects: Project[] = [
-  {
-    title: "Serenity community",
-    image: "./image/image10.jpg",
-    cost: "$234k",
-    client: "ABS nexus",
-    year: "15 may 2026",
-    location: "Dixon road-12, Australia",
-  },
-  {
-    title: "Serenity community",
-    image: "./image/image11.jpg",
-    cost: "$234k",
-    client: "ABS nexus",
-    year: "15 may 2026",
-    location: "Dixon road-12, Australia",
-  },
-  {
-    title: "Serenity community",
-    image: "./image/image12.jpg",
-    cost: "$234k",
-    client: "ABS nexus",
-    year: "15 may 2026",
-    location: "Dixon road-12, Australia",
-  },
-  {
-    title: "Serenity community",
-    image: "./image/image10.jpg",
-    cost: "$234k",
-    client: "ABS nexus",
-    year: "15 may 2026",
-    location: "Dixon road-12, Australia",
-  },
-  {
-    title: "Serenity community",
-    image: "./image/image11.jpg",
-    cost: "$234k",
-    client: "ABS nexus",
-    year: "15 may 2026",
-    location: "Dixon road-12, Australia",
-  },
-  {
-    title: "Serenity community",
-    image: "./image/image12.jpg",
-    cost: "$234k",
-    client: "ABS nexus",
-    year: "15 may 2026",
-    location: "Dixon road-12, Australia",
-  },
-];
-
-// Card component with typed props
-const ProjectCard: React.FC<Project> = ({
-  title,
-  image,
-  cost,
-  client,
-  year,
-  location,
-}) => (
-  <div className="flex flex-col gap-3">
-    {/* Image Container with Black Overlay */}
-    <div className="relative rounded-2xl overflow-hidden shadow-lg">
-      <img
-        src={image}
-        alt={title}
-        className="w-full h-[250px] sm:h-[300px] md:h-[340px] lg:h-[378px] object-cover"
-      />
-      {/* Black Overlay */}
-      <div className="absolute top-0 left-0 w-full h-1/5 bg-gradient-to-b from-black/60 to-transparent" />
-      {/* Title overlay at top */}
-      <h3 className="absolute top-4 left-4 text-white text-base sm:text-lg font-semibold drop-shadow-md z-10">
-        {title}
-      </h3>
-    </div>
-
-    {/* White Content Card - No separator line */}
-    <div className="bg-white rounded-2xl shadow-md p-4 sm:p-5">
-      {/* Labels row */}
-      <div className="grid grid-cols-3 mb-1">
-        <p className="text-xs text-gray-400 text-left">Cost</p>
-        <p className="text-xs text-gray-400 text-left">Client</p>
-        <p className="text-xs text-gray-400 text-left">Project year</p>
-      </div>
-
-      {/* Values row */}
-      <div className="grid grid-cols-3 mb-3">
-        <p className="text-sm font-bold text-gray-900 text-left">{cost}</p>
-        <p className="text-sm font-bold text-gray-900 text-left">{client}</p>
-        <p className="text-sm font-bold text-gray-900 text-left">{year}</p>
-      </div>
-
-      {/* Location */}
-      <div className="flex items-center gap-2 text-gray-600 text-sm">
-        <svg
-          className="w-4 h-4 text-gray-400 flex-shrink-0"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            fillRule="evenodd"
-            d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-            clipRule="evenodd"
-          />
-        </svg>
-        <span className="truncate">{location}</span>
-      </div>
-    </div>
-  </div>
-);
-
-// Main wrapper exported as ProjectsCarousel
 const ProjectsCarousel: React.FC = () => {
+  const featuredProjects = getFeaturedProjects(6);
+
   return (
     <section className="bg-[#f9fafb] py-12 sm:py-16 px-4">
       <div className="max-w-7xl mx-auto">
@@ -159,18 +43,26 @@ const ProjectsCarousel: React.FC = () => {
           </h2>
         </div>
 
-        {/* Grid - Responsive columns */}
+        {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-10 sm:mb-12">
-          {projects.map((project, index) => (
-            <ProjectCard key={index} {...project} />
+          {featuredProjects.map((project) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              showCategory={false} // Hide category badge in carousel
+              variant="carousel"
+            />
           ))}
         </div>
 
         {/* View All Button */}
         <div className="flex justify-center">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-10 sm:px-12 py-3 sm:py-3.5 rounded-lg transition duration-200 text-sm sm:text-base">
+          <Link
+            to="/projects"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-10 sm:px-12 py-3 sm:py-3.5 rounded-lg transition duration-200 text-sm sm:text-base"
+          >
             View all
-          </button>
+          </Link>
         </div>
       </div>
     </section>

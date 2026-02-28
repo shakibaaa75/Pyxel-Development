@@ -72,7 +72,7 @@ export default function BlogSection() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 sm:mb-12 gap-4">
         <div>
           {/* Blog Post Badge */}
-          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-50 rounded-full mb-3 sm:mb-4 transition-all duration-300 hover:bg-blue-100">
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-3 sm:mb-4 transition-all duration-300 hover:bg-blue-100">
             <svg
               className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600"
               fill="none"
@@ -92,7 +92,7 @@ export default function BlogSection() {
           </div>
 
           {/* Title */}
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 ml-[16px] leading-tight">
             Latest news
             <br />
             <span className="text-gray-400 font-normal">insight</span>

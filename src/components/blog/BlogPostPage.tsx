@@ -1,3 +1,4 @@
+// pages/BlogPostPage.tsx
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import { SAMPLE_POSTS } from "../../data/blogData";
@@ -6,6 +7,7 @@ import type { BlogPost } from "../../types/blog";
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [instagramPosts, setInstagramPosts] = useState<any[]>([]);
@@ -293,27 +295,12 @@ export default function BlogPostPage() {
   ];
   const topPosts = SAMPLE_POSTS.filter((p) => p.id !== post.id).slice(0, 5);
 
+  // REMOVED: Breadcrumb is now handled by App.tsx
+  // Don't include <AutoBreadcrumb /> or <Breadcrumb /> here
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation Breadcrumb */}
-      <div className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center gap-2 text-sm text-gray-500">
-            <Link to="/" className="hover:text-blue-600 transition">
-              Home
-            </Link>
-            <span>/</span>
-            <Link to="/" className="hover:text-blue-600 transition">
-              Blog
-            </Link>
-            <span>/</span>
-            <span className="text-gray-900 truncate max-w-xs">
-              {post.title}
-            </span>
-          </div>
-        </div>
-      </div>
-
+      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Main Content - Left Side */}
