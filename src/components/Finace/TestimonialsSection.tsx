@@ -1,5 +1,4 @@
 import React from "react";
-import { Star } from "lucide-react";
 
 // --- Types ---
 interface Testimonial {
@@ -12,7 +11,6 @@ interface Testimonial {
 }
 
 // --- Mock Data ---
-// Using images that look good without borders (close-up portraits)
 const TESTIMONIALS: Testimonial[] = [
   {
     id: 1,
@@ -56,26 +54,47 @@ const TESTIMONIALS: Testimonial[] = [
   },
 ];
 
-// --- Components ---
-
+// --- Star Rating Component with SVG ---
 const StarRating = ({ count }: { count: number }) => {
   return (
     <div className="flex gap-1 justify-center">
       {[...Array(5)].map((_, i) => (
-        <Star
+        <img
           key={i}
-          size={16}
-          className={`${
-            i < count
-              ? "fill-orange-400 text-orange-400"
-              : "fill-gray-200 text-gray-200"
+          src="/svg/star.svg"
+          alt="star"
+          className={`w-4 h-4 ${
+            i < count ? "opacity-100" : "opacity-30 grayscale"
           }`}
+          style={{
+            filter:
+              i < count
+                ? "brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(431%) hue-rotate(347deg) brightness(101%) contrast(96%)"
+                : "none",
+          }}
         />
       ))}
     </div>
   );
 };
 
+// --- Alternative: If you want a filled star and empty star version ---
+const StarRatingWithTwoSvgs = ({ count }: { count: number }) => {
+  return (
+    <div className="flex gap-1 justify-center">
+      {[...Array(5)].map((_, i) => (
+        <img
+          key={i}
+          src={i < count ? "/svg/star-filled.svg" : "/svg/star-empty.svg"}
+          alt="star"
+          className="w-4 h-4"
+        />
+      ))}
+    </div>
+  );
+};
+
+// --- Testimonial Card Component ---
 const TestimonialCard = ({ data }: { data: Testimonial }) => {
   return (
     <div
@@ -85,7 +104,7 @@ const TestimonialCard = ({ data }: { data: Testimonial }) => {
         height: "214px",
         borderRadius: "10px",
         boxShadow: "0px 0px 12px 0px #0252CF1A",
-        marginTop: "40px", // Space for the floating avatar
+        marginTop: "40px",
       }}
     >
       {/* Avatar - Positioned to overlap top edge */}
@@ -116,9 +135,10 @@ const TestimonialCard = ({ data }: { data: Testimonial }) => {
   );
 };
 
+// --- Main Component ---
 export default function TestimonialsSection() {
   return (
-    <section className="py-12 px-4 bg-slate-50/50 font-sans  flex flex-col items-center justify-center">
+    <section className="py-12 px-4 bg-slate-50/50 font-sans flex flex-col items-center justify-center">
       {/* Header */}
       <div className="text-center mb-12">
         <h2 className="text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">
@@ -138,11 +158,11 @@ export default function TestimonialsSection() {
         <div
           className="flex gap-8 overflow-x-auto pb-8 pt-4 px-4 snap-x snap-mandatory"
           style={{
-            scrollbarWidth: "none", // Firefox
-            msOverflowStyle: "none", // IE/Edge
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
           }}
         >
-          {/* Hide scrollbar for Chrome/Safari/Opera via inline style injection or CSS class */}
+          {/* Hide scrollbar for Chrome/Safari/Opera */}
           <style>{`
             div::-webkit-scrollbar {
               display: none;

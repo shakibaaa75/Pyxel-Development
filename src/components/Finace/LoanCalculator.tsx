@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Calculator, Phone } from "lucide-react";
 
 const LoanCalculator: React.FC = () => {
   const [loanAmount, setLoanAmount] = useState<number>(25000);
@@ -39,7 +38,11 @@ const LoanCalculator: React.FC = () => {
 
           <button className="group flex items-center gap-3 text-white hover:text-blue-400 transition-colors duration-300">
             <div className="w-12 h-12 rounded-full border-2 border-white group-hover:border-blue-400 flex items-center justify-center transition-colors duration-300">
-              <Phone className="w-5 h-5" />
+              <img
+                src="/svg/Item1.svg"
+                alt="phone"
+                className="w-5 h-5 filter brightness-0 invert group-hover:brightness-100 group-hover:invert-0 transition-all duration-300"
+              />
             </div>
             <span className="text-lg font-medium border-b border-white group-hover:border-blue-400 pb-1 transition-colors duration-300">
               Contact a Representative
@@ -119,9 +122,13 @@ const LoanCalculator: React.FC = () => {
             {/* Calculate Button */}
             <button
               onClick={calculatePayment}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg inline-flex items-center justify-center gap-2 transition-colors duration-200"
             >
-              <Calculator className="w-5 h-5" />
+              <img
+                src="/svg/calculater 1.png"
+                alt="calculator"
+                className="w-5 h-5 filter brightness-0 invert"
+              />
               Calculate
             </button>
 
