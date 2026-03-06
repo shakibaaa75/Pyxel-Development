@@ -15,6 +15,8 @@ import ServiceArea from "./ServiceArea";
 import BlogForHome from "../blog/BlogforHome";
 import StatsSection from "./StatsSection";
 import WhyChooseUs from "./WhyChooseUs";
+import TeamMembers from "./TeamMember";
+import HomeWeWork from "./HowWeWork";
 
 interface PageOneAllSectionProps {
   faqs: { question: string; answer: string }[];
@@ -31,6 +33,9 @@ const PageOneAllSection: React.FC<PageOneAllSectionProps> = ({ faqs }) => {
       <ThardsecTionPage1 />
       <StatsSection />
       <WhyChooseUs />
+
+      <TeamMembers />
+      <HomeWeWork />
       <FourthSection />
 
       {/* Services Section */}

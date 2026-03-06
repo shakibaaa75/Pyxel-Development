@@ -1,4 +1,12 @@
+/* Import fonts FIRST - before anything else */
+@import url('https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap');
+
+/* Then import Tailwind */
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Rethink Sans", sans-serif;
+}
 
 @keyframes fadeIn {
   from {
@@ -17,4 +25,15 @@
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Apply font globally */
+html {
+  font-family: var(--font-sans);
+  font-optical-sizing: auto;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

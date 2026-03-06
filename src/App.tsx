@@ -17,6 +17,9 @@ import Contact from "./pages/Contact";
 import BlogPostPage from "./components/blog/BlogPostPage";
 import ProjectsArchive from "./components/Projects/ProjectsArchive";
 import ProjectSinglePage from "./components/Projects/ProjectSinglePage";
+import FaqSection from "./components/faq/FaqSection";
+import Faq from "./pages/Faq";
+import Financing from "./pages/Financing";
 
 // Create a wrapper component that handles scrolling
 function ScrollToTopWrapper({ children }: { children: React.ReactNode }) {
@@ -229,6 +232,8 @@ const App: React.FC = () => {
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/projects" element={<ProjectsArchive />} />
           <Route path="/projects/:id" element={<ProjectSinglePage />} />
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/financing" element={<Financing />} />
         </Routes>
       </ScrollToTopWrapper>
 

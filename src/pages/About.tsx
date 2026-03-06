@@ -1,11 +1,11 @@
 // pages/About.tsx
 import React from "react";
-import HeroSection from "../components/about/HeroSection";
+import AboutPage from "../components/about/AboutPage";
 
 const About: React.FC = () => {
   return (
     <div>
-      <HeroSection />
+      <AboutPage />
     </div>
   );
 };
