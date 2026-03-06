@@ -218,24 +218,6 @@ export default function TestimonialsSection() {
       </div>
 
       {/* Optional: Previous/Next buttons for larger screens */}
-      <div className="flex gap-4 mt-4 sm:hidden">
-        <button
-          onClick={() => scrollToIndex(Math.max(0, activeIndex - 1))}
-          className="px-4 py-2 bg-white rounded-lg shadow-md text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
-          disabled={activeIndex === 0}
-        >
-          Previous
-        </button>
-        <button
-          onClick={() =>
-            scrollToIndex(Math.min(TESTIMONIALS.length - 1, activeIndex + 1))
-          }
-          className="px-4 py-2 bg-white rounded-lg shadow-md text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
-          disabled={activeIndex === TESTIMONIALS.length - 1}
-        >
-          Next
-        </button>
-      </div>
     </section>
   );
 }
