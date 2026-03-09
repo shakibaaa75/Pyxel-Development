@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import type { BlogPost } from "../../types/blog";
 
 interface BlogCardProps {
-  post: BlogPost & { imageWebp?: string }; // Add optional WebP field
+  post: BlogPost;
 }
 
 export default function BlogCard({ post }: BlogCardProps) {
@@ -14,24 +14,13 @@ export default function BlogCard({ post }: BlogCardProps) {
   return (
     <Link to={`/blog/${slug}`} className="group block h-full cursor-pointer">
       <article className="h-full">
-        {/* Image Container with WebP support */}
+        {/* Image Container */}
         <div className="relative overflow-hidden rounded-2xl mb-5">
-          <picture>
-            {/* WebP source if available */}
-            {post.imageWebp && (
-              <source srcSet={post.imageWebp} type="image/webp" />
-            )}
-            {/* Fallback to original format */}
-            <source srcSet={post.image} type="image/jpeg" />
-            {/* Actual image */}
-            <img
-              src={post.image}
-              alt={post.title}
-              className="h-56 w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-              loading="lazy"
-              decoding="async"
-            />
-          </picture>
+          <img
+            src={post.image}
+            alt={post.title}
+            className="h-56 w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          />
         </div>
 
         {/* Title */}

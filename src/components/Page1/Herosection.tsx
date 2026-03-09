@@ -6,35 +6,35 @@ const slides = [
     rating: "5.0",
     reviews: "234+",
     text: "Where quality construction meets complete client satisfaction",
-    socialImage: "./image/Facebook.webp",
+    socialImage: "./image/Facebook.png",
   },
   {
     platform: "Google",
     rating: "5.0",
     reviews: "283+",
     text: "Exceptional service and attention to detail",
-    socialImage: "./image/Google.webp",
+    socialImage: "./image/Google.png",
   },
   {
     platform: "Angi",
     rating: "5.0",
     reviews: "198+",
     text: "Trusted professionals delivering quality work and dependable service",
-    socialImage: "./image/Angi.webp",
+    socialImage: "./image/Angi.png",
   },
   {
     platform: "Houzz",
     rating: "5.0",
     reviews: "312+",
     text: "Beautiful craftsmanship paired with outstanding customer experience",
-    socialImage: "./image/Houzz.webp",
+    socialImage: "./image/Houzz.png",
   },
   {
     platform: "Yelp",
     rating: "5.0",
     reviews: "174+",
     text: "Highly recommended for quality, professionalism, and clear communication",
-    socialImage: "./image/Yelp.webp",
+    socialImage: "./image/Yelp.png",
   },
 ];
 
@@ -70,27 +70,11 @@ export default function HeroSection() {
 
   return (
     <section className="relative w-full min-h-[85vh] lg:h-[85vh] flex items-center overflow-hidden font-sans">
-      {/* PRELOAD CRITICAL IMAGES FOR LCP */}
-      <link
-        rel="preload"
-        as="image"
-        href="/image/image1-960.webp"
-        type="image/webp"
-        media="(max-width: 960px)"
-      />
-      <link
-        rel="preload"
-        as="image"
-        href="/image/image1-1920.webp"
-        type="image/webp"
-        media="(min-width: 961px)"
-      />
-
-      {/* OPTIMIZED BACKGROUND IMAGE - WebP with JPG fallback */}
+      {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('/image/image1-960.webp'), url('/image/image1.jpg')`,
+          backgroundImage: "url('./image/image1.jpg')",
         }}
       />
 
@@ -123,7 +107,7 @@ export default function HeroSection() {
         }}
       />
 
-      {/* Main Content */}
+      {/* Main Content - Reduced padding on mobile */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-10 sm:py-14 lg:py-20 pb-20 sm:pb-28 lg:pb-40 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
         {/* Left Content */}
         <div className="max-w-xl">
@@ -150,24 +134,24 @@ export default function HeroSection() {
             </span>
           </div>
 
-          {/* Heading */}
+          {/* Heading - Smaller on mobile */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl ml-[-6px] lg:text-[58px] font-extrabold text-gray-900 leading-tight mb-4 sm:mb-6">
             General Contractor In Sacramento, CA
           </h1>
 
-          {/* Description */}
+          {/* Description - Smaller on mobile */}
           <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6 sm:mb-8 max-w-lg">
             From home renovations to large-scale construction, we deliver
             quality craftsmanship, reliable timelines, and results you can
             trust.
           </p>
 
-          {/* CTA Button */}
+          {/* CTA Button - Smaller padding on mobile */}
           <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 sm:px-9 py-3 sm:py-3.5 rounded-lg transition duration-200 text-sm sm:text-base">
             Get a Free Quote
           </button>
 
-          {/* Mobile/Tablet Review Card */}
+          {/* Mobile/Tablet Review Card - Left aligned, bigger than before */}
           <div
             className="mt-6 sm:mt-8 lg:hidden"
             onMouseEnter={() => setIsPaused(true)}
@@ -183,14 +167,12 @@ export default function HeroSection() {
                 WebkitBackdropFilter: "blur(24px)",
               }}
             >
-              {/* Dynamic Social Image - Now using WebP */}
+              {/* Dynamic Social Image */}
               <div className="mb-3">
                 <img
                   src={slides[currentSlide].socialImage}
                   alt={slides[currentSlide].platform}
                   className="h-auto w-[80px] sm:w-[88px] object-contain rounded"
-                  loading="lazy"
-                  decoding="async"
                 />
               </div>
 
@@ -289,7 +271,7 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Right Side - Review Card - Desktop ONLY */}
+        {/* Right Side - Review Card - Desktop ONLY - Original absolute positioning preserved */}
         <div
           className="hidden lg:flex justify-end items-end self-end h-full pb-24"
           onMouseEnter={() => setIsPaused(true)}
@@ -309,14 +291,12 @@ export default function HeroSection() {
               WebkitBackdropFilter: "blur(24px)",
             }}
           >
-            {/* Dynamic Social Image based on current slide - Now using WebP */}
+            {/* Dynamic Social Image based on current slide - 88px width */}
             <div className="mb-4">
               <img
                 src={slides[currentSlide].socialImage}
                 alt={slides[currentSlide].platform}
                 className="h-auto w-[88px] object-contain rounded"
-                loading="lazy"
-                decoding="async"
               />
             </div>
 
@@ -363,7 +343,7 @@ export default function HeroSection() {
                 ))}
               </div>
 
-              {/* Rectangle Buttons */}
+              {/* Rectangle Buttons - Both White, change color on click */}
               <div className="flex gap-2">
                 <button
                   onClick={handlePrev}
@@ -415,7 +395,7 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* White curved bottom with blue arc */}
+      {/* White curved bottom with blue arc - FIX: Added -bottom-[1px] to eliminate black line */}
       <div className="absolute -bottom-[1px] left-0 right-0 z-20">
         <svg
           viewBox="0 0 1440 80"
@@ -424,7 +404,9 @@ export default function HeroSection() {
           className="w-full h-[50px] sm:h-[60px] lg:h-[70px] block"
           preserveAspectRatio="none"
         >
+          {/* White fill - adjusted curve to compensate for -bottom-[1px] */}
           <path d="M0 80 L0 15 Q720 75 1440 15 L1440 80 Z" fill="white" />
+          {/* Blue stroke on top edge */}
           <path
             d="M0 15 Q720 75 1440 15"
             fill="none"

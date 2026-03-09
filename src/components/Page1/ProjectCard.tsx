@@ -1,5 +1,5 @@
 // components/ProjectCard.tsx
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import type { Project } from "../../data/projectData";
 
@@ -14,22 +14,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   showCategory = true,
   variant = "default",
 }) => {
-  const {
-    id,
-    title,
-    image,
-    imageWebp,
-    cost,
-    client,
-    year,
-    location,
-    category,
-  } = project;
-  const [imageError, setImageError] = useState(false);
+  const { id, title, image, cost, client, year, location, category } = project;
 
-  // Extract filename for fallback (if needed)
+  // Extract filename from the path (e.g., "./image/image10.jpg" -> "image10")
   const filename = image
-    .replace("/image/", "")
+    .replace("./image/", "")
     .replace(/\.(jpg|jpeg|png)$/, "");
 
   // Different height classes based on variant
@@ -38,42 +27,23 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       ? "h-[250px] sm:h-[300px] md:h-[340px] lg:h-[378px]"
       : "h-[250px] sm:h-[300px] md:h-[340px]";
 
-  // First 4 projects are critical (above the fold)
-  const isCritical = parseInt(id) <= 4;
-
-  // Determine image source based on error state
-  const imageSrc = imageError
-    ? image // Fallback to original JPG if WebP failed
-    : imageWebp || `/image/${filename}-960.webp`; // Try WebP first (either from data or constructed)
-
   return (
     <Link to={`/projects/${id}`} className="group block">
-      {/* Preload for critical projects only */}
-      {isCritical && !imageError && imageWebp && (
-        <link rel="preload" as="image" href={imageWebp} type="image/webp" />
-      )}
-
       <div className="flex flex-col gap-3">
         {/* Image Container */}
         <div className="relative rounded-2xl overflow-hidden shadow-lg">
-          {/* Optimized Image with WebP and JPG fallback */}
           <img
-            key={id} // Use id as key to prevent re-render loops
-            src={imageSrc}
+            src={`/image/${filename}-960.webp`}
             alt={title}
             className={`w-full ${imageHeightClass} object-cover transition-transform duration-500 group-hover:scale-105`}
-            loading={isCritical ? "eager" : "lazy"}
-            decoding={isCritical ? "sync" : "async"}
-            fetchPriority={isCritical ? "high" : "auto"}
-            onError={() => {
-              // Only try fallback once to prevent infinite loops
-              if (!imageError) {
-                console.log(
-                  `WebP failed for project ${id}, using JPG fallback`,
-                );
-                setImageError(true);
-              }
+            loading="lazy"
+            decoding="async"
+            onError={(e) => {
+              // If WebP fails, try the original JPG
+              console.log(`Falling back to JPG for: ${filename}`);
+              (e.target as HTMLImageElement).src = `/image/${filename}.jpg`;
             }}
+            onLoad={() => console.log(`Loaded: ${filename}`)}
           />
 
           {/* Gradient Overlay */}

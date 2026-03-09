@@ -4,9 +4,7 @@ export interface Project {
   id: string;
   title: string;
   image: string;
-  imageWebp?: string; // Optional WebP version
   gallery: string[];
-  galleryWebp?: string[]; // Optional WebP gallery versions
   cost: string;
   client: string;
   year: string;
@@ -34,37 +32,16 @@ export const categories = [
   "Road & Bridge Construction",
 ];
 
-// Helper function to generate WebP path from image path
-const getWebpPath = (imagePath: string): string => {
-  return imagePath.replace(/\.(jpg|jpeg|png)$/i, '.webp');
-};
-
-// Helper function to process project with WebP images
-const processProject = (project: any): Project => {
-  return {
-    ...project,
-    imageWebp: getWebpPath(project.image),
-    galleryWebp: project.gallery.map((img: string) => getWebpPath(img)),
-  };
-};
-
 export const allProjects: Project[] = [
   {
     id: "serenity-community-1",
     title: "Serenity Community",
     image: "/image/image10.jpg",
-    imageWebp: "/image/image10.webp",
     gallery: [
       "/image/image10.jpg",
       "/image/image11.jpg",
       "/image/image12.jpg",
       "/image/image13.jpg",
-    ],
-    galleryWebp: [
-      "/image/image10.webp",
-      "/image/image11.webp",
-      "/image/image12.webp",
-      "/image/image13.webp",
     ],
     cost: "$234,000",
     client: "ABS Nexus",
@@ -99,18 +76,11 @@ export const allProjects: Project[] = [
     id: "urban-heights",
     title: "Urban Heights",
     image: "/image/image11.jpg",
-    imageWebp: "/image/image11.webp",
     gallery: [
       "/image/image11.jpg",
       "/image/image12.jpg",
       "/image/image13.jpg",
       "/image/image14.jpg",
-    ],
-    galleryWebp: [
-      "/image/image11.webp",
-      "/image/image12.webp",
-      "/image/image13.webp",
-      "/image/image14.webp",
     ],
     cost: "$450,000",
     client: "Metro Developments",
@@ -140,18 +110,11 @@ export const allProjects: Project[] = [
     id: "green-valley",
     title: "Green Valley Estate",
     image: "/image/image12.jpg",
-    imageWebp: "/image/image12.webp",
     gallery: [
       "/image/image12.jpg",
       "/image/image13.jpg",
       "/image/image14.jpg",
       "/image/image15.jpg",
-    ],
-    galleryWebp: [
-      "/image/image12.webp",
-      "/image/image13.webp",
-      "/image/image14.webp",
-      "/image/image15.webp",
     ],
     cost: "$890,000",
     client: "Green Living Co",
@@ -181,18 +144,11 @@ export const allProjects: Project[] = [
     id: "harbor-bridge",
     title: "Harbor Bridge Plaza",
     image: "/image/image13.jpg",
-    imageWebp: "/image/image13.webp",
     gallery: [
       "/image/image13.jpg",
       "/image/image14.jpg",
       "/image/image15.jpg",
       "/image/image16.jpg",
-    ],
-    galleryWebp: [
-      "/image/image13.webp",
-      "/image/image14.webp",
-      "/image/image15.webp",
-      "/image/image16.webp",
     ],
     cost: "$1,200,000",
     client: "Harbor Group",
@@ -219,18 +175,11 @@ export const allProjects: Project[] = [
     id: "sunset-villas",
     title: "Sunset Villas",
     image: "/image/image14.jpg",
-    imageWebp: "/image/image14.webp",
     gallery: [
       "/image/image14.jpg",
       "/image/image15.jpg",
       "/image/image16.jpg",
       "/image/image17.jpg",
-    ],
-    galleryWebp: [
-      "/image/image14.webp",
-      "/image/image15.webp",
-      "/image/image16.webp",
-      "/image/image17.webp",
     ],
     cost: "$670,000",
     client: "Luxury Homes Inc",
@@ -262,18 +211,11 @@ export const allProjects: Project[] = [
     id: "tech-hub",
     title: "Innovation Tech Hub",
     image: "/image/image15.jpg",
-    imageWebp: "/image/image15.webp",
     gallery: [
       "/image/image15.jpg",
       "/image/image16.jpg",
       "/image/image17.jpg",
       "/image/image18.jpg",
-    ],
-    galleryWebp: [
-      "/image/image15.webp",
-      "/image/image16.webp",
-      "/image/image17.webp",
-      "/image/image18.webp",
     ],
     cost: "$2,100,000",
     client: "Innovation Labs",
@@ -300,18 +242,11 @@ export const allProjects: Project[] = [
     id: "mountain-retreat",
     title: "Mountain Escape Retreat",
     image: "/image/image16.jpg",
-    imageWebp: "/image/image16.webp",
     gallery: [
       "/image/image16.jpg",
       "/image/image17.jpg",
       "/image/image18.jpg",
       "/image/image10.jpg",
-    ],
-    galleryWebp: [
-      "/image/image16.webp",
-      "/image/image17.webp",
-      "/image/image18.webp",
-      "/image/image10.webp",
     ],
     cost: "$340,000",
     client: "Nature Escapes",
@@ -338,18 +273,11 @@ export const allProjects: Project[] = [
     id: "central-mall",
     title: "Central Shopping Mall",
     image: "/image/image17.jpg",
-    imageWebp: "/image/image17.webp",
     gallery: [
       "/image/image17.jpg",
       "/image/image18.jpg",
       "/image/image10.jpg",
       "/image/image11.jpg",
-    ],
-    galleryWebp: [
-      "/image/image17.webp",
-      "/image/image18.webp",
-      "/image/image10.webp",
-      "/image/image11.webp",
     ],
     cost: "$3,500,000",
     client: "Retail Giants",
@@ -376,18 +304,11 @@ export const allProjects: Project[] = [
     id: "industrial-park",
     title: "Advanced Industrial Park",
     image: "/image/image18.jpg",
-    imageWebp: "/image/image18.webp",
     gallery: [
       "/image/image18.jpg",
       "/image/image10.jpg",
       "/image/image11.jpg",
       "/image/image12.jpg",
-    ],
-    galleryWebp: [
-      "/image/image18.webp",
-      "/image/image10.webp",
-      "/image/image11.webp",
-      "/image/image12.webp",
     ],
     cost: "$1,800,000",
     client: "Manufacturing Co",
@@ -439,7 +360,3 @@ export const getFeaturedProjects = (count: number = 6): Project[] => {
   return allProjects.slice(0, count);
 };
 
-// Helper function to process all projects (useful if you want to automate WebP paths)
-export const getAllProjectsWithWebp = (): Project[] => {
-  return allProjects.map(project => processProject(project));
-};

@@ -279,50 +279,6 @@ function ScrollToTopWrapper({ children }: { children: React.ReactNode }) {
 }
 
 // Data for services
-const services = [
-  {
-    title: "Pre-Construction Planning",
-    description:
-      "We set your project up for success with detailed planning, accurate budgeting, and clear timelines...",
-    icon: "./svg/Item7.svg",
-  },
-  {
-    title: "Project Management",
-    description:
-      "From scheduling to quality control, we oversee every stage of your build to ensure it's completed...",
-    icon: "./svg/Item8.svg",
-  },
-  {
-    title: "Kitchen Remodeling",
-    description: "Transform your kitchen into a beautiful, functional space...",
-    icon: "./svg/kitchen.svg",
-  },
-  {
-    title: "Bathroom Remodeling",
-    description: "Upgrade your bathroom with modern designs...",
-    icon: "./svg/bathroom.svg",
-  },
-  {
-    title: "Deck Construction & Repair",
-    description: "Build a stunning, durable deck...",
-    icon: "./svg/deck.svg",
-  },
-  {
-    title: "Patio Construction & Repair",
-    description: "Create the perfect outdoor living space...",
-    icon: "./svg/patio.svg",
-  },
-  {
-    title: "Balcony Construction & Repair",
-    description: "Create the perfect balcony...",
-    icon: "./svg/balcony.svg",
-  },
-  {
-    title: "Fencing & Gates",
-    description: "Secure and beautify your property...",
-    icon: "./svg/fence.svg",
-  },
-];
 
 // Data for FAQ
 const faqData = [
@@ -464,10 +420,7 @@ const App: React.FC = () => {
       <ScrollToTopWrapper>
         <Suspense fallback={<PageLoader />}>
           <Routes>
-            <Route
-              path="/"
-              element={<Home services={services} faqs={faqData} />}
-            />
+            <Route path="/" element={<Home faqs={faqData} />} />
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
             <Route path="/shop" element={<Shop />} />

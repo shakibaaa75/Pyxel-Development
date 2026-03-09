@@ -21,27 +21,6 @@ export default function BlogSection() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Optional: Preload first 3 images for better performance
-  useEffect(() => {
-    const preloadImages = () => {
-      const firstThreePosts = SAMPLE_POSTS.slice(0, 3);
-      firstThreePosts.forEach((post) => {
-        if ((post as any).imageWebp) {
-          const link = document.createElement("link");
-          link.rel = "preload";
-          link.as = "image";
-          link.href = (post as any).imageWebp;
-          link.type = "image/webp";
-          document.head.appendChild(link);
-        }
-      });
-    };
-
-    // Only preload after initial page load
-    window.addEventListener("load", preloadImages);
-    return () => window.removeEventListener("load", preloadImages);
-  }, []);
-
   // Show different number of cards based on screen size
   const visibleCount = isMobile ? 1 : 3;
   const maxIndex = SAMPLE_POSTS.length - visibleCount;
