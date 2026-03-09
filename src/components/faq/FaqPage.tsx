@@ -1,4 +1,3 @@
-import React from "react";
 import FaqSection from "./FaqSection";
 import HeroSection from "../../reusableComponents/ReUseHerosec";
 import FromSec from "../Page1/FromSec"; // This is correct!

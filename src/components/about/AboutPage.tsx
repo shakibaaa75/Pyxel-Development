@@ -1,4 +1,3 @@
-import React from "react";
 import TeamMembers from "../Page1/TeamMember";
 import HomeWeWork from "../Page1/HowWeWork";
 import WhyChooseUs from "../Page1/WhyChooseUs";

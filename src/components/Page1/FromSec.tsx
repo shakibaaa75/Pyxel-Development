@@ -1,5 +1,5 @@
 // ContactSection.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 
 const FromSec: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -67,8 +67,6 @@ const FromSec: React.FC = () => {
           _subject: "New Contact Form Submission from Pyxel Construction",
         }),
       });
-
-      const result = await response.json();
 
       if (response.ok) {
         // Set submitted state to true to change button text

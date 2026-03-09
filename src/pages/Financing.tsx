@@ -1,4 +1,3 @@
-import React from "react";
 import FinanceAllsec from "../components/Finace/FinanceAllsec";
 
 const Financing = () => {

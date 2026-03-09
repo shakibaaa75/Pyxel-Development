@@ -1,4 +1,3 @@
-import React from "react";
 
 import FaqPage from "../components/faq/FaqPage";
 

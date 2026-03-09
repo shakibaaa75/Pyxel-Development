@@ -13,8 +13,8 @@ interface HomeProps {
   faqs: { question: string; answer: string }[];
 }
 
-const Home: React.FC<HomeProps> = ({ services, faqs }) => {
-  return <PageOneAllSection services={services} faqs={faqs} />;
+const Home: React.FC<HomeProps> = ({ faqs }) => {
+  return <PageOneAllSection faqs={faqs} />;
 };
 
 export default Home;

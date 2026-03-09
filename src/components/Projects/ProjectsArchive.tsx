@@ -1,7 +1,7 @@
 // pages/ProjectsArchive.tsx
 import React, { useState } from "react";
 import { allProjects, getUniqueCategories } from "../../data/projectData"; // Regular import for values
-import type { Project } from "../../data/projectData"; // Type-only import for types
+// Type-only import for types
 import ProjectCard from "../Page1/ProjectCard";
 
 const ProjectsArchive: React.FC = () => {

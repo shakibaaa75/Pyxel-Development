@@ -3,7 +3,7 @@ import React, {
   useMemo,
   Suspense,
   lazy,
-  CSSProperties,
+  type CSSProperties,
 } from "react";
 import { Routes, Route, useLocation, matchPath } from "react-router-dom";
 import Navebar from "./components/Page1/Navebar";

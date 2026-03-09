@@ -190,7 +190,7 @@ export default function TestimonialsSection() {
             }
           `}</style>
 
-          {TESTIMONIALS.map((item, index) => (
+          {TESTIMONIALS.map((item) => (
             <div
               key={item.id}
               className="snap-center first:snap-start last:snap-end"

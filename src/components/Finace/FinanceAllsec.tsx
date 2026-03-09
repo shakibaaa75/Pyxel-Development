@@ -1,4 +1,3 @@
-import React from "react";
 import LoanCalculator from "./LoanCalculator";
 import TestimonialsSection from "./TestimonialsSection";
 import ProcessSection from "./ProcessSection";
