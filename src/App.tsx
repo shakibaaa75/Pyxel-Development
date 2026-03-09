@@ -1,5 +1,4 @@
-// App.tsx
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, Suspense, lazy } from "react";
 import { Routes, Route, useLocation, matchPath } from "react-router-dom";
 import Navebar from "./components/Page1/Navebar";
 import Footer from "./components/Footer";
@@ -8,18 +7,51 @@ import {
   type BreadcrumbItem,
 } from "./reusableComponents/Breadcrumb";
 
-// Import page components
+// Lazy load page components (only Home is eagerly loaded for fast initial paint)
 import Home from "./pages/Home";
-import About from "./pages/About";
-import Services from "./pages/Services";
-import Shop from "./pages/Shop";
-import Contact from "./pages/Contact";
-import BlogPostPage from "./components/blog/BlogPostPage";
-import ProjectsArchive from "./components/Projects/ProjectsArchive";
-import ProjectSinglePage from "./components/Projects/ProjectSinglePage";
-import FaqSection from "./components/faq/FaqSection";
-import Faq from "./pages/Faq";
-import Financing from "./pages/Financing";
+
+const About = lazy(() => import("./pages/About"));
+const Services = lazy(() => import("./pages/Services"));
+const Shop = lazy(() => import("./pages/Shop"));
+const Contact = lazy(() => import("./pages/Contact"));
+const BlogPostPage = lazy(() => import("./components/blog/BlogPostPage"));
+const ProjectsArchive = lazy(
+  () => import("./components/Projects/ProjectsArchive"),
+);
+const ProjectSinglePage = lazy(
+  () => import("./components/Projects/ProjectSinglePage"),
+);
+const Faq = lazy(() => import("./pages/Faq"));
+const Financing = lazy(() => import("./pages/Financing"));
+
+// Simple loading spinner component
+const PageLoader: React.FC = () => (
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "50vh",
+    }}
+  >
+    <div
+      style={{
+        width: "40px",
+        height: "40px",
+        border: "3px solid #f3f3f3",
+        borderTop: "3px solid #3498db",
+        borderRadius: "50%",
+        animation: "spin 1s linear infinite",
+      }}
+    />
+    <style>{`
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `}</style>
+  </div>
+);
 
 // Create a wrapper component that handles scrolling
 function ScrollToTopWrapper({ children }: { children: React.ReactNode }) {
@@ -220,21 +252,23 @@ const App: React.FC = () => {
 
       {/* ScrollToTopWrapper ensures every new page starts from the top */}
       <ScrollToTopWrapper>
-        <Routes>
-          <Route
-            path="/"
-            element={<Home services={services} faqs={faqData} />}
-          />
-          <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/blog/:slug" element={<BlogPostPage />} />
-          <Route path="/projects" element={<ProjectsArchive />} />
-          <Route path="/projects/:id" element={<ProjectSinglePage />} />
-          <Route path="/faq" element={<Faq />} />
-          <Route path="/financing" element={<Financing />} />
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route
+              path="/"
+              element={<Home services={services} faqs={faqData} />}
+            />
+            <Route path="/about" element={<About />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/blog/:slug" element={<BlogPostPage />} />
+            <Route path="/projects" element={<ProjectsArchive />} />
+            <Route path="/projects/:id" element={<ProjectSinglePage />} />
+            <Route path="/faq" element={<Faq />} />
+            <Route path="/financing" element={<Financing />} />
+          </Routes>
+        </Suspense>
       </ScrollToTopWrapper>
 
       {/* Footer - Always visible */}
