@@ -1,7 +1,7 @@
 // components/ProjectCard.tsx
 import React from "react";
 import { Link } from "react-router-dom";
-import type { Project } from "../../data/projectData";
+import type { Project } from "../../data/projectData"; // Type-only import
 
 interface ProjectCardProps {
   project: Project;
@@ -16,11 +16,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 }) => {
   const { id, title, image, cost, client, year, location, category } = project;
 
-  // Extract filename from the path (e.g., "./image/image10.jpg" -> "image10")
-  const filename = image
-    .replace("./image/", "")
-    .replace(/\.(jpg|jpeg|png)$/, "");
-
   // Different height classes based on variant
   const imageHeightClass =
     variant === "carousel"
@@ -33,19 +28,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         {/* Image Container */}
         <div className="relative rounded-2xl overflow-hidden shadow-lg">
           <img
-            src={`/image/${filename}-960.webp`}
+            src={image}
             alt={title}
             className={`w-full ${imageHeightClass} object-cover transition-transform duration-500 group-hover:scale-105`}
-            loading="lazy"
-            decoding="async"
-            onError={(e) => {
-              // If WebP fails, try the original JPG
-              console.log(`Falling back to JPG for: ${filename}`);
-              (e.target as HTMLImageElement).src = `/image/${filename}.jpg`;
-            }}
-            onLoad={() => console.log(`Loaded: ${filename}`)}
           />
-
           {/* Gradient Overlay */}
           <div className="absolute top-0 left-0 w-full h-1/5 bg-gradient-to-b from-black/60 to-transparent" />
 
@@ -64,6 +50,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
         {/* Content Card */}
         <div className="bg-white rounded-2xl shadow-md p-4 sm:p-5 group-hover:shadow-lg transition border border-gray-100">
+          {/* Labels */}
           <div className="grid grid-cols-3 mb-1">
             <p className="text-xs text-gray-400 text-left">Cost</p>
             <p className="text-xs text-gray-400 text-left">Client</p>
@@ -72,6 +59,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             </p>
           </div>
 
+          {/* Values */}
           <div className="grid grid-cols-3 mb-3">
             <p className="text-sm font-bold text-gray-900 text-left">{cost}</p>
             <p className="text-sm font-bold text-gray-900 text-left truncate">
@@ -80,6 +68,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             <p className="text-sm font-bold text-gray-900 text-left">{year}</p>
           </div>
 
+          {/* Location */}
           <div className="flex items-center gap-2 text-gray-600 text-sm">
             <svg
               className="w-4 h-4 text-blue-600 flex-shrink-0"
