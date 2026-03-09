@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, Suspense, lazy } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  Suspense,
+  lazy,
+  CSSProperties,
+} from "react";
 import { Routes, Route, useLocation, matchPath } from "react-router-dom";
 import Navebar from "./components/Page1/Navebar";
 import Footer from "./components/Footer";
@@ -24,34 +30,238 @@ const ProjectSinglePage = lazy(
 const Faq = lazy(() => import("./pages/Faq"));
 const Financing = lazy(() => import("./pages/Financing"));
 
-// Simple loading spinner component
-const PageLoader: React.FC = () => (
+// LinkedIn-style Skeleton Loader Components
+interface SkeletonPulseProps {
+  className?: string;
+  style?: CSSProperties;
+}
+
+const SkeletonPulse: React.FC<SkeletonPulseProps> = ({
+  className = "",
+  style,
+}) => (
+  <div
+    className={`skeleton-pulse ${className}`}
+    style={{
+      background:
+        "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)",
+      backgroundSize: "200% 100%",
+      animation: "shimmer 1.5s infinite",
+      borderRadius: "4px",
+      ...style,
+    }}
+  />
+);
+
+const SkeletonText: React.FC<{ lines?: number; width?: string }> = ({
+  lines = 3,
+  width = "100%",
+}) => (
+  <div style={{ display: "flex", flexDirection: "column", gap: "12px", width }}>
+    {Array.from({ length: lines }).map((_, i) => (
+      <SkeletonPulse
+        key={i}
+        className="skeleton-text"
+        style={{ height: "16px", width: i === lines - 1 ? "80%" : "100%" }}
+      />
+    ))}
+  </div>
+);
+
+const SkeletonCard: React.FC = () => (
   <div
     style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      minHeight: "50vh",
+      background: "#fff",
+      borderRadius: "8px",
+      padding: "20px",
+      marginBottom: "16px",
+      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+      border: "1px solid #e0e0e0",
     }}
   >
     <div
-      style={{
-        width: "40px",
-        height: "40px",
-        border: "3px solid #f3f3f3",
-        borderTop: "3px solid #3498db",
-        borderRadius: "50%",
-        animation: "spin 1s linear infinite",
-      }}
-    />
-    <style>{`
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    `}</style>
+      style={{ display: "flex", alignItems: "center", marginBottom: "16px" }}
+    >
+      <SkeletonPulse
+        style={{
+          width: "48px",
+          height: "48px",
+          borderRadius: "50%",
+          marginRight: "12px",
+        }}
+      />
+      <div style={{ flex: 1 }}>
+        <SkeletonPulse
+          style={{ width: "60%", height: "16px", marginBottom: "8px" }}
+        />
+        <SkeletonPulse style={{ width: "40%", height: "12px" }} />
+      </div>
+    </div>
+    <SkeletonText lines={4} />
   </div>
 );
+
+const SkeletonHero: React.FC = () => (
+  <div
+    style={{
+      width: "100%",
+      height: "400px",
+      background: "#f5f5f5",
+      position: "relative",
+      overflow: "hidden",
+      marginBottom: "40px",
+    }}
+  >
+    <SkeletonPulse
+      style={{ width: "100%", height: "100%", borderRadius: "0" }}
+    />
+    <div
+      style={{
+        position: "absolute",
+        bottom: "40px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: "60%",
+        textAlign: "center",
+      }}
+    >
+      <SkeletonPulse
+        style={{ height: "32px", marginBottom: "16px", borderRadius: "4px" }}
+      />
+      <SkeletonPulse
+        style={{
+          height: "16px",
+          width: "80%",
+          margin: "0 auto",
+          borderRadius: "4px",
+        }}
+      />
+    </div>
+  </div>
+);
+
+const SkeletonGrid: React.FC<{ items?: number }> = ({ items = 6 }) => (
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+      gap: "24px",
+      padding: "20px",
+    }}
+  >
+    {Array.from({ length: items }).map((_, i) => (
+      <div
+        key={i}
+        style={{
+          background: "#fff",
+          borderRadius: "8px",
+          overflow: "hidden",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+          border: "1px solid #e0e0e0",
+        }}
+      >
+        <SkeletonPulse
+          style={{ width: "100%", height: "200px", borderRadius: "0" }}
+        />
+        <div style={{ padding: "16px" }}>
+          <SkeletonPulse
+            style={{ height: "20px", marginBottom: "8px", width: "80%" }}
+          />
+          <SkeletonPulse style={{ height: "14px", width: "60%" }} />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+// LinkedIn-style Page Loader that adapts to route type
+const PageLoader: React.FC = () => {
+  const location = useLocation();
+
+  // Determine what type of skeleton to show based on current route
+  const getSkeletonType = () => {
+    const path = location.pathname;
+    if (path.includes("/projects")) return "grid";
+    if (path.includes("/blog")) return "article";
+    if (path.includes("/shop")) return "grid";
+    return "generic";
+  };
+
+  const skeletonType = getSkeletonType();
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#f3f2ef",
+      }}
+    >
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+        .skeleton-pulse {
+          animation: shimmer 1.5s infinite;
+        }
+      `}</style>
+
+      {/* Top spacing for navbar */}
+      <div style={{ height: "80px" }} />
+
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
+        {skeletonType === "grid" && (
+          <>
+            <SkeletonPulse
+              style={{ height: "40px", width: "300px", marginBottom: "24px" }}
+            />
+            <SkeletonGrid items={6} />
+          </>
+        )}
+
+        {skeletonType === "article" && (
+          <>
+            <SkeletonHero />
+            <div
+              style={{
+                maxWidth: "800px",
+                margin: "0 auto",
+                background: "#fff",
+                padding: "40px",
+                borderRadius: "8px",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+              }}
+            >
+              <SkeletonPulse
+                style={{ height: "32px", marginBottom: "24px", width: "90%" }}
+              />
+              <SkeletonText lines={8} />
+              <div style={{ marginTop: "32px" }}>
+                <SkeletonText lines={6} />
+              </div>
+            </div>
+          </>
+        )}
+
+        {skeletonType === "generic" && (
+          <>
+            <SkeletonHero />
+            <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
+              <div style={{ flex: "1 1 300px" }}>
+                <SkeletonCard />
+                <SkeletonCard />
+              </div>
+              <div style={{ flex: "1 1 300px" }}>
+                <SkeletonCard />
+                <SkeletonCard />
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
 
 // Create a wrapper component that handles scrolling
 function ScrollToTopWrapper({ children }: { children: React.ReactNode }) {
