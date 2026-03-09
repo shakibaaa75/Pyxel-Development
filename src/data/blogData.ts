@@ -1,6 +1,12 @@
 import type { BlogPost } from "../types/blog";
 import { calculateReadingTime } from "../utils/readingTime";
 
+// Helper function to generate WebP path
+const getWebpPath = (imagePath: string): string => {
+  return imagePath.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+};
+
+// Base posts data without WebP fields
 const postsData = [
   {
     id: "1",
@@ -206,8 +212,41 @@ const postsData = [
   },
 ];
 
-// Calculate reading time for each post
-export const SAMPLE_POSTS: BlogPost[] = postsData.map(post => ({
+// Update BlogPost type to include WebP fields
+export interface BlogPostWithWebp extends BlogPost {
+  imageWebp?: string;
+}
+
+// Calculate reading time and add WebP paths for each post
+export const SAMPLE_POSTS: BlogPostWithWebp[] = postsData.map(post => ({
   ...post,
+  imageWebp: getWebpPath(post.image),
   readTime: calculateReadingTime(post.content),
 }));
+
+// Helper function to get a single post by slug with WebP
+export const getPostBySlug = (slug: string): BlogPostWithWebp | undefined => {
+  return SAMPLE_POSTS.find(post => post.slug === slug);
+};
+
+// Helper function to get related posts (same category, excluding current)
+export const getRelatedPosts = (currentSlug: string, limit: number = 3): BlogPostWithWebp[] => {
+  const currentPost = SAMPLE_POSTS.find(post => post.slug === currentSlug);
+  if (!currentPost) return [];
+  
+  return SAMPLE_POSTS
+    .filter(post => post.category === currentPost.category && post.slug !== currentSlug)
+    .slice(0, limit);
+};
+
+// Helper function to get posts by category
+export const getPostsByCategory = (category: string): BlogPostWithWebp[] => {
+  if (category === "All") return SAMPLE_POSTS;
+  return SAMPLE_POSTS.filter(post => post.category === category);
+};
+
+// Helper function to get unique categories
+export const getUniqueCategories = (): string[] => {
+  const categories = SAMPLE_POSTS.map(post => post.category);
+  return ["All", ...Array.from(new Set(categories))];
+};

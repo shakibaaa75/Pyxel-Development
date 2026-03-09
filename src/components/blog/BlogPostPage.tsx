@@ -1,4 +1,3 @@
-// pages/BlogPostPage.tsx
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import { SAMPLE_POSTS } from "../../data/blogData";
@@ -178,9 +177,12 @@ export default function BlogPostPage() {
       if (existingTwitterMeta) existingTwitterMeta.remove();
 
       const baseUrl = window.location.origin;
-      const imageUrl = post.image?.startsWith("http")
-        ? post.image
-        : `${baseUrl}${post.image?.startsWith("/") ? "" : "/"}${post.image || ""}`;
+      // Try to use WebP for social media if available
+      const imageUrl = (post as any).imageWebp
+        ? (post as any).imageWebp
+        : post.image?.startsWith("http")
+          ? post.image
+          : `${baseUrl}${post.image?.startsWith("/") ? "" : "/"}${post.image || ""}`;
 
       const ogImage = document.createElement("meta");
       ogImage.setAttribute("property", "og:image");
@@ -240,13 +242,25 @@ export default function BlogPostPage() {
     };
   }, []);
 
-  // Helper function to get correct image path
-  const getImageUrl = (imagePath: string) => {
+  // Helper function to get correct image path with WebP support
+  const getImageUrl = (imagePath: string, useWebp: boolean = true) => {
     try {
       if (!imagePath) return "/images/fallback-image.jpg";
       if (imagePath.startsWith("http")) {
         return imagePath;
       }
+
+      // Check if we have a WebP version and the browser supports it
+      if (useWebp && (post as any)?.imageWebp) {
+        const cleanWebpPath = (post as any).imageWebp.replace(
+          /^\.\/|^\.\.\//g,
+          "",
+        );
+        return cleanWebpPath.startsWith("/")
+          ? cleanWebpPath
+          : `/${cleanWebpPath}`;
+      }
+
       const cleanPath = imagePath.replace(/^\.\/|^\.\.\//g, "");
       return cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`;
     } catch (error) {
@@ -282,7 +296,8 @@ export default function BlogPostPage() {
     return null;
   }
 
-  const readingTime = post.readTime || calculateReadingTime(post.content || "");
+  const readingTime =
+    (post as any).readTime || calculateReadingTime(post.content || "");
   const currentIndex = SAMPLE_POSTS.findIndex((p) => p.id === post.id);
   const prevPost = currentIndex > 0 ? SAMPLE_POSTS[currentIndex - 1] : null;
   const nextPost =
@@ -295,9 +310,6 @@ export default function BlogPostPage() {
   ];
   const topPosts = SAMPLE_POSTS.filter((p) => p.id !== post.id).slice(0, 5);
 
-  // REMOVED: Breadcrumb is now handled by App.tsx
-  // Don't include <AutoBreadcrumb /> or <Breadcrumb /> here
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Main Content */}
@@ -305,17 +317,34 @@ export default function BlogPostPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Main Content - Left Side */}
           <div className="lg:col-span-2">
-            {/* Featured Image */}
+            {/* Featured Image with WebP support */}
             <div className="relative rounded-2xl overflow-hidden mb-8 bg-gray-100">
-              <img
-                src={getImageUrl(post.image || "")}
-                alt={post.title || "Blog post"}
-                className="w-full h-[400px] lg:h-[500px] object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    "https://images.unsplash.com/photo-1581094794329-c8112c4e5190?w=1200&h=600&fit=crop";
-                }}
-              />
+              <picture>
+                {/* WebP version if available */}
+                {(post as any).imageWebp && (
+                  <source
+                    srcSet={getImageUrl((post as any).imageWebp, false)}
+                    type="image/webp"
+                  />
+                )}
+                {/* JPEG fallback */}
+                <source
+                  srcSet={getImageUrl(post.image || "", false)}
+                  type="image/jpeg"
+                />
+                {/* Actual image */}
+                <img
+                  src={getImageUrl(post.image || "")}
+                  alt={post.title || "Blog post"}
+                  className="w-full h-[400px] lg:h-[500px] object-cover"
+                  loading="eager" // LCP image - eager load
+                  decoding="async"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src =
+                      "https://images.unsplash.com/photo-1581094794329-c8112c4e5190?w=1200&h=600&fit=crop";
+                  }}
+                />
+              </picture>
             </div>
 
             {/* Title & Meta */}

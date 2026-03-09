@@ -14,17 +14,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   showCategory = true,
   variant = "default",
 }) => {
-  const {
-    id,
-    title,
-    image,
-    imageWebp,
-    cost,
-    client,
-    year,
-    location,
-    category,
-  } = project;
+  const { id, title, image, cost, client, year, location, category } = project;
+
+  // Get base filename without extension
+  const baseFilename = image
+    .replace(/\.(jpg|jpeg|png)$/i, "")
+    .replace("./image/", "");
 
   // Different height classes based on variant
   const imageHeightClass =
@@ -37,10 +32,27 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       <div className="flex flex-col gap-3">
         {/* Image Container */}
         <div className="relative rounded-2xl overflow-hidden shadow-lg">
-          {/* Picture element for WebP with JPG fallback */}
           <picture>
-            {imageWebp && <source srcSet={imageWebp} type="image/webp" />}
-            <source srcSet={image} type="image/jpeg" />
+            {/* WebP sources with responsive sizes */}
+            <source
+              srcSet={`
+                /image/${baseFilename}-960.webp 960w,
+                /image/${baseFilename}-1920.webp 1920w,
+                /image/${baseFilename}.webp 2560w
+              `}
+              sizes="(max-width: 640px) 480px, (max-width: 1024px) 960px, 1920px"
+              type="image/webp"
+            />
+            {/* JPEG fallback */}
+            <source
+              srcSet={`
+                ${image}?w=960 960w,
+                ${image}?w=1920 1920w
+              `}
+              sizes="(max-width: 640px) 480px, (max-width: 1024px) 960px, 1920px"
+              type="image/jpeg"
+            />
+            {/* Actual image */}
             <img
               src={image}
               alt={title}
