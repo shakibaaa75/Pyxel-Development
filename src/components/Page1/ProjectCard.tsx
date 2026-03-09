@@ -1,5 +1,5 @@
 // components/ProjectCard.tsx
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import type { Project } from "../../data/projectData";
 
@@ -14,12 +14,23 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   showCategory = true,
   variant = "default",
 }) => {
-  const { id, title, image, cost, client, year, location, category } = project;
+  const {
+    id,
+    title,
+    image,
+    imageWebp,
+    cost,
+    client,
+    year,
+    location,
+    category,
+  } = project;
+  const [imageError, setImageError] = useState(false);
 
-  // Get base filename without extension
-  const baseFilename = image
-    .replace(/\.(jpg|jpeg|png)$/i, "")
-    .replace("./image/", "");
+  // Extract filename for fallback (if needed)
+  const filename = image
+    .replace("/image/", "")
+    .replace(/\.(jpg|jpeg|png)$/, "");
 
   // Different height classes based on variant
   const imageHeightClass =
@@ -27,40 +38,43 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       ? "h-[250px] sm:h-[300px] md:h-[340px] lg:h-[378px]"
       : "h-[250px] sm:h-[300px] md:h-[340px]";
 
+  // First 4 projects are critical (above the fold)
+  const isCritical = parseInt(id) <= 4;
+
+  // Determine image source based on error state
+  const imageSrc = imageError
+    ? image // Fallback to original JPG if WebP failed
+    : imageWebp || `/image/${filename}-960.webp`; // Try WebP first (either from data or constructed)
+
   return (
     <Link to={`/projects/${id}`} className="group block">
+      {/* Preload for critical projects only */}
+      {isCritical && !imageError && imageWebp && (
+        <link rel="preload" as="image" href={imageWebp} type="image/webp" />
+      )}
+
       <div className="flex flex-col gap-3">
         {/* Image Container */}
         <div className="relative rounded-2xl overflow-hidden shadow-lg">
-          <picture>
-            {/* WebP sources with responsive sizes */}
-            <source
-              srcSet={`
-                /image/${baseFilename}-960.webp 960w,
-                /image/${baseFilename}-1920.webp 1920w,
-                /image/${baseFilename}.webp 2560w
-              `}
-              sizes="(max-width: 640px) 480px, (max-width: 1024px) 960px, 1920px"
-              type="image/webp"
-            />
-            {/* JPEG fallback */}
-            <source
-              srcSet={`
-                ${image}?w=960 960w,
-                ${image}?w=1920 1920w
-              `}
-              sizes="(max-width: 640px) 480px, (max-width: 1024px) 960px, 1920px"
-              type="image/jpeg"
-            />
-            {/* Actual image */}
-            <img
-              src={image}
-              alt={title}
-              className={`w-full ${imageHeightClass} object-cover transition-transform duration-500 group-hover:scale-105`}
-              loading="lazy"
-              decoding="async"
-            />
-          </picture>
+          {/* Optimized Image with WebP and JPG fallback */}
+          <img
+            key={id} // Use id as key to prevent re-render loops
+            src={imageSrc}
+            alt={title}
+            className={`w-full ${imageHeightClass} object-cover transition-transform duration-500 group-hover:scale-105`}
+            loading={isCritical ? "eager" : "lazy"}
+            decoding={isCritical ? "sync" : "async"}
+            fetchPriority={isCritical ? "high" : "auto"}
+            onError={() => {
+              // Only try fallback once to prevent infinite loops
+              if (!imageError) {
+                console.log(
+                  `WebP failed for project ${id}, using JPG fallback`,
+                );
+                setImageError(true);
+              }
+            }}
+          />
 
           {/* Gradient Overlay */}
           <div className="absolute top-0 left-0 w-full h-1/5 bg-gradient-to-b from-black/60 to-transparent" />
@@ -80,7 +94,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
         {/* Content Card */}
         <div className="bg-white rounded-2xl shadow-md p-4 sm:p-5 group-hover:shadow-lg transition border border-gray-100">
-          {/* Labels */}
           <div className="grid grid-cols-3 mb-1">
             <p className="text-xs text-gray-400 text-left">Cost</p>
             <p className="text-xs text-gray-400 text-left">Client</p>
@@ -89,7 +102,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             </p>
           </div>
 
-          {/* Values */}
           <div className="grid grid-cols-3 mb-3">
             <p className="text-sm font-bold text-gray-900 text-left">{cost}</p>
             <p className="text-sm font-bold text-gray-900 text-left truncate">
@@ -98,7 +110,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             <p className="text-sm font-bold text-gray-900 text-left">{year}</p>
           </div>
 
-          {/* Location */}
           <div className="flex items-center gap-2 text-gray-600 text-sm">
             <svg
               className="w-4 h-4 text-blue-600 flex-shrink-0"

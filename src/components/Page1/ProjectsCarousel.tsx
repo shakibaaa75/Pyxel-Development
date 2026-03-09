@@ -1,4 +1,4 @@
-// pages/ProjectsCarousel.tsx (optional enhancement)
+// pages/ProjectsCarousel.tsx
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getFeaturedProjects } from "../../data/projectData";
@@ -7,7 +7,7 @@ import ProjectCard from "./ProjectCard";
 const ProjectsCarousel: React.FC = () => {
   const featuredProjects = getFeaturedProjects(6);
 
-  // Optional: Preload first two images for better LCP
+  // Preload first two images for better LCP using the imageWebp property
   useEffect(() => {
     if (featuredProjects[0]?.imageWebp) {
       const link = document.createElement("link");
@@ -25,7 +25,12 @@ const ProjectsCarousel: React.FC = () => {
       link.type = "image/webp";
       document.head.appendChild(link);
     }
-  }, []);
+
+    // Cleanup function (optional but good practice)
+    return () => {
+      // You could remove the links if needed, but it's usually fine to leave them
+    };
+  }, []); // Empty dependency array means this runs once on mount
 
   return (
     <section className="bg-[#f9fafb] py-12 sm:py-16 px-4">
