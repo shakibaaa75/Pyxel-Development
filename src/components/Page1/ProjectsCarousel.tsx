@@ -1,11 +1,31 @@
-// pages/ProjectsCarousel.tsx
-import React from "react";
+// pages/ProjectsCarousel.tsx (optional enhancement)
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getFeaturedProjects } from "../../data/projectData";
 import ProjectCard from "./ProjectCard";
 
 const ProjectsCarousel: React.FC = () => {
   const featuredProjects = getFeaturedProjects(6);
+
+  // Optional: Preload first two images for better LCP
+  useEffect(() => {
+    if (featuredProjects[0]?.imageWebp) {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "image";
+      link.href = featuredProjects[0].imageWebp;
+      link.type = "image/webp";
+      document.head.appendChild(link);
+    }
+    if (featuredProjects[1]?.imageWebp) {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "image";
+      link.href = featuredProjects[1].imageWebp;
+      link.type = "image/webp";
+      document.head.appendChild(link);
+    }
+  }, []);
 
   return (
     <section className="bg-[#f9fafb] py-12 sm:py-16 px-4">
@@ -49,7 +69,7 @@ const ProjectsCarousel: React.FC = () => {
             <ProjectCard
               key={project.id}
               project={project}
-              showCategory={false} // Hide category badge in carousel
+              showCategory={false}
               variant="carousel"
             />
           ))}

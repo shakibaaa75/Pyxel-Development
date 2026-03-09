@@ -70,11 +70,27 @@ export default function HeroSection() {
 
   return (
     <section className="relative w-full min-h-[85vh] lg:h-[85vh] flex items-center overflow-hidden font-sans">
-      {/* Background Image */}
+      {/* Preload critical images for LCP */}
+      <link
+        rel="preload"
+        as="image"
+        href="/image/image1-960.webp"
+        type="image/webp"
+        media="(max-width: 960px)"
+      />
+      <link
+        rel="preload"
+        as="image"
+        href="/image/image1-1920.webp"
+        type="image/webp"
+        media="(min-width: 961px)"
+      />
+
+      {/* Optimized Background Image with WebP and JPEG fallback */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: "url('./image/image1.jpg')",
+          backgroundImage: `url('/image/image1-960.webp'), url('/image/image1-1920.webp'), url('/image/image1.jpg')`,
         }}
       />
 

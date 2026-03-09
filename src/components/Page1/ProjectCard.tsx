@@ -1,7 +1,7 @@
 // components/ProjectCard.tsx
 import React from "react";
 import { Link } from "react-router-dom";
-import type { Project } from "../../data/projectData"; // Type-only import
+import type { Project } from "../../data/projectData";
 
 interface ProjectCardProps {
   project: Project;
@@ -14,7 +14,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   showCategory = true,
   variant = "default",
 }) => {
-  const { id, title, image, cost, client, year, location, category } = project;
+  const {
+    id,
+    title,
+    image,
+    imageWebp,
+    cost,
+    client,
+    year,
+    location,
+    category,
+  } = project;
 
   // Different height classes based on variant
   const imageHeightClass =
@@ -27,11 +37,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       <div className="flex flex-col gap-3">
         {/* Image Container */}
         <div className="relative rounded-2xl overflow-hidden shadow-lg">
-          <img
-            src={image}
-            alt={title}
-            className={`w-full ${imageHeightClass} object-cover transition-transform duration-500 group-hover:scale-105`}
-          />
+          {/* Picture element for WebP with JPG fallback */}
+          <picture>
+            {imageWebp && <source srcSet={imageWebp} type="image/webp" />}
+            <source srcSet={image} type="image/jpeg" />
+            <img
+              src={image}
+              alt={title}
+              className={`w-full ${imageHeightClass} object-cover transition-transform duration-500 group-hover:scale-105`}
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
+
           {/* Gradient Overlay */}
           <div className="absolute top-0 left-0 w-full h-1/5 bg-gradient-to-b from-black/60 to-transparent" />
 
