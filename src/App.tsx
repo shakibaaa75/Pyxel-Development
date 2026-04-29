@@ -15,9 +15,14 @@ import {
 
 // Lazy load page components (only Home is eagerly loaded for fast initial paint)
 import Home from "./pages/Home";
+import ProjectTracker from "./pages/ProjectTracker";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const About = lazy(() => import("./pages/About"));
 const Services = lazy(() => import("./pages/Services"));
+const ServiceSinglePage = lazy(
+  () => import("./components/Page1/ServiceSinglePage"),
+);
 const Shop = lazy(() => import("./pages/Shop"));
 const Contact = lazy(() => import("./pages/Contact"));
 const BlogPostPage = lazy(() => import("./components/blog/BlogPostPage"));
@@ -184,6 +189,7 @@ const PageLoader: React.FC = () => {
     if (path.includes("/projects")) return "grid";
     if (path.includes("/blog")) return "article";
     if (path.includes("/shop")) return "grid";
+    if (path.includes("/services/")) return "article";
     return "generic";
   };
 
@@ -278,8 +284,6 @@ function ScrollToTopWrapper({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-// Data for services
-
 // Data for FAQ
 const faqData = [
   {
@@ -322,6 +326,16 @@ const routeConfigs: RouteConfig[] = [
   { path: "/", label: "Home", showBreadcrumb: false },
   { path: "/about", label: "About Us", parent: "/", showBreadcrumb: false },
   { path: "/services", label: "Services", parent: "/", showBreadcrumb: false },
+  {
+    path: "/services/:slug",
+    label: "Service Details",
+    parent: "/services",
+    showBreadcrumb: true,
+    dynamicLabel: (params) =>
+      params.slug
+        ?.replace(/-/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase()) || "Service Details",
+  },
   { path: "/shop", label: "Shop", parent: "/", showBreadcrumb: false },
   { path: "/contact", label: "Contact", parent: "/", showBreadcrumb: false },
   { path: "/projects", label: "Projects", parent: "/", showBreadcrumb: false },
@@ -423,6 +437,7 @@ const App: React.FC = () => {
             <Route path="/" element={<Home faqs={faqData} />} />
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/services/:slug" element={<ServiceSinglePage />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/blog/:slug" element={<BlogPostPage />} />
@@ -430,6 +445,9 @@ const App: React.FC = () => {
             <Route path="/projects/:id" element={<ProjectSinglePage />} />
             <Route path="/faq" element={<Faq />} />
             <Route path="/financing" element={<Financing />} />
+            // Make sure your route is EXACTLY this:
+            <Route path="/track" element={<ProjectTracker />} />
+            <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </Suspense>
       </ScrollToTopWrapper>
