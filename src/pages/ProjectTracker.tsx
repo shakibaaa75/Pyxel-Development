@@ -140,7 +140,7 @@ const CodeEntry = ({ onFound }: { onFound: (project: Project) => void }) => {
     setError("");
     try {
       const res = await fetch(
-        `${API}/project?code=${encodeURIComponent(trimmed)}`,
+        `${API}/api/project?code=${encodeURIComponent(trimmed)}`,
       );
       const data = await res.json();
       if (res.ok) onFound(data as Project);
@@ -742,7 +742,7 @@ export default function ProjectTracker() {
   useEffect(() => {
     const token = searchParams.get("t");
     if (token) {
-      fetch(`${API}/project?t=${token}`)
+      fetch(`${API}/api/project?t=${token}`)
         .then((res) => res.json())
         .then((data) => {
           if (data.id) setProject(data);
