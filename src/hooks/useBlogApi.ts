@@ -19,7 +19,7 @@ export interface BlogPost {
   date?: string;
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const API_URL = import.meta.env.VITE_API_URL ;
 
 /**
  * Axios client (API only)
