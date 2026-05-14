@@ -1,11 +1,17 @@
 export interface BlogPost {
+  publishedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+  published: boolean;
+  tags: string[];
+  siteId: string;
   id: string;
   title: string;
   slug: string;
   excerpt: string;
-  content: string; // HTML or plain text content
+  content: string;
   image: string;
   category: string;
   date: string;
-  readTime?: string; // Optional - will be calculated if not provided
+  readTime?: string;
 }

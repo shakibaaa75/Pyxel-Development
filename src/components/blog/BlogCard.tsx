@@ -5,21 +5,32 @@ interface BlogCardProps {
   post: BlogPost;
 }
 
-export default function BlogCard({ post }: BlogCardProps) {
-  const slug = post.title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+const getImageUrl = (imagePath: string) => {
+  if (!imagePath)
+    return "https://images.unsplash.com/photo-1581094794329-c8112c4e5190?w=800&h=400&fit=crop";
+  if (imagePath.startsWith("http")) return imagePath;
+  const API_BASE = import.meta.env.VITE_API_URL;
+  const cleanPath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
+  return `${API_BASE}${cleanPath}`;
+};
 
+export default function BlogCard({ post }: BlogCardProps) {
   return (
-    <Link to={`/blog/${slug}`} className="group block h-full cursor-pointer">
+    <Link
+      to={`/blog/${post.slug}`}
+      className="group block h-full cursor-pointer"
+    >
       <article className="h-full">
         {/* Image Container */}
         <div className="relative overflow-hidden rounded-2xl mb-5">
           <img
-            src={post.image}
+            src={getImageUrl(post.image)}
             alt={post.title}
             className="h-56 w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src =
+                "https://images.unsplash.com/photo-1581094794329-c8112c4e5190?w=800&h=400&fit=crop";
+            }}
           />
         </div>
 
