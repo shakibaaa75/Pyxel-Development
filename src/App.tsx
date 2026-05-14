@@ -16,7 +16,6 @@ import {
 // Lazy load page components (only Home is eagerly loaded for fast initial paint)
 import Home from "./pages/Home";
 import ProjectTracker from "./pages/ProjectTracker";
-import AdminDashboard from "./pages/AdminDashboard";
 
 const About = lazy(() => import("./pages/About"));
 const Services = lazy(() => import("./pages/Services"));
@@ -447,7 +446,6 @@ const App: React.FC = () => {
             <Route path="/financing" element={<Financing />} />
             // Make sure your route is EXACTLY this:
             <Route path="/track" element={<ProjectTracker />} />
-            <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </Suspense>
       </ScrollToTopWrapper>
